@@ -1,0 +1,80 @@
+// :host {
+
+//   --ion-color-primary: #ffce00;
+//   --ion-color-primary-rgb: 255, 206, 0;
+//   --ion-color-primary-contrast: #ffffff;
+//   --ion-color-primary-contrast-rgb: 255, 255, 255;
+//   --ion-color-primary-shade: #e0b500;
+//   --ion-color-primary-tint: #ffd31a;
+//   --ion-font-family: "OpenSans";
+
+  ion-content {
+    --color: #fff;
+    --background: none;
+    background: #60166c url(../../../assets/images/uitm-logo.png) no-repeat;
+    background-size: 40vh;
+    background-position-x: right;
+    background-position-y: top;
+  }
+
+//   ion-button {
+//     width: 50vw;
+//     width: 60vmin;
+//     height: 5vh;
+//     height: 6vmin;
+//     ion-label {
+//       font-size: 1.5vh;
+//       font-size: 2vmin;
+//     }
+//   }
+
+//   ion-tab-button {
+//     ion-label {
+//       font-size: 2vh;
+//       font-size: 3vmin;
+//     }
+//   }
+
+//   ion-item {
+//     width: 40vw;
+//     width: 50vmin;
+//     --background: transparent;
+//     --color: #ffffff;
+//     ion-label {
+//       font-family: "OpenSans";
+//       font-size: 2vh;
+//       font-size: 3vmin;
+//     }
+//   }
+
+//   ion-label {
+//     font-family: "OpenSans";
+//     font-size: 3vw;
+//     font-size: 4vmin;
+//   }
+
+//   h1 {
+//     font-family: "Orbitron";
+//     font-weight: bold;
+//     // color: #fff;
+//     text-align: center;
+//     vertical-align: middle;
+//     line-height: 30vh;
+//     height: auto;
+//     text-decoration: none;
+//     font-size: 10vw;
+//     // background-color: #666;
+//   }
+
+//   p {
+//     font-family: "OpenSans";
+//     font-size: 1.5vw;
+//     font-size: 2vmin;
+//   }
+
+//   hr {
+//     width: 60%;
+//     margin-left: auto;
+//     margin-right: auto;
+//   }
+// }

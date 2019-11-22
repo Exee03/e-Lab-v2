@@ -1,0 +1,133 @@
+<ion-header id="headerVerify" *ngIf="!hasVerified" class="hasVerified"
+  >Your email still not verified. Please check your email for email
+  verification.</ion-header
+>
+
+<ion-header #header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-grid class="ion-padding-start">
+      <ion-label>
+        <p style="font-size: 5vmin; padding-left: 30px;">{{ role }}</p>
+      </ion-label>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-grid
+      ><ion-label>
+        <h2 style="font-size: 10vmin; font-weight: bold; padding-left: 30px;">
+          Report Writing
+        </h2>
+      </ion-label></ion-grid
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-fab
+  vertical="bottom"
+  horizontal="end"
+  slot="fixed"
+  (click)="createReport()"
+>
+  <ion-fab-button><ion-icon name="add"></ion-icon></ion-fab-button>
+</ion-fab>
+
+<ion-content
+  [scrollEvents]="true"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollStart)="scrollStart(header)"
+  forceOverscroll="true"
+>
+  <div *ngIf="isEmpty">
+    <ion-grid>
+      <ion-row justify-content-center align-items-center style="height: 40vh">
+        <ion-label position="floating"
+          >It looks like you haven't created a report yet...</ion-label
+        >
+      </ion-row>
+    </ion-grid>
+  </div>
+  <div *ngIf="!isEmpty">
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>
+          Pending
+        </ion-label>
+      </ion-item-divider>
+
+      <ion-item-sliding *ngFor="let item of report" #slider1>
+        <ion-item *ngIf="item.submit != true" (click)="openReport(item)">
+          <ion-icon
+            name="document"
+            color="soft"
+            class="ion-padding-horizontal"
+          ></ion-icon>
+          <ion-label>
+            <h3>{{ item.courseCode }} : {{ item.title }}</h3>
+            <p>{{ item.lastEdit }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options  (click)="closeSlider(slider1)">
+          <ion-item-option color="primary" (click)="editReport(item.uid)"
+            ><ion-icon
+              name="create"
+              class="ion-padding-horizontal"
+              style="zoom:1.5;"
+            ></ion-icon
+          ></ion-item-option>
+          <ion-item-option color="primary" (click)="deleteReport(item.uid)"
+            ><ion-icon
+              name="trash"
+              class="ion-padding-horizontal"
+              style="zoom:1.5;"
+            ></ion-icon
+          ></ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-item-group>
+
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>
+          Submitted
+        </ion-label>
+      </ion-item-divider>
+
+      <ion-item-sliding *ngFor="let item of report" #slider2>
+        <ion-item *ngIf="item.submit == true" (click)="openReport(item)">
+          <ion-icon
+            name="document"
+            color="soft"
+            class="ion-padding-horizontal"
+          ></ion-icon>
+          <ion-label>
+            <h3>{{ item.courseCode }} : {{ item.title }}</h3>
+            <p>{{ item.lastEdit }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options  (click)="closeSlider(slider2)">
+          <ion-item-option color="primary" (click)="editReport(item.uid)"
+            ><ion-icon
+              name="create"
+              class="ion-padding-horizontal"
+              style="zoom:1.5;"
+            ></ion-icon
+          ></ion-item-option>
+          <ion-item-option color="primary" (click)="deleteReport(item.uid)"
+            ><ion-icon
+              name="trash"
+              class="ion-padding-horizontal"
+              style="zoom:1.5;"
+            ></ion-icon
+          ></ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-item-group>
+  </div>
+</ion-content>

@@ -1,0 +1,76 @@
+.frontPage {
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.displayed {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 250px;
+  padding-top: 30px;
+}
+
+.table {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.spacing {
+  line-height: 1.5em;
+  text-align: justify;
+  text-justify: inter-word;
+  page-break-inside: always;
+}
+
+.header {
+  page-break-before: always;
+  //   text-transform: uppercase;
+  font-weight: bold;
+}
+
+@page {
+  size: A4;
+}
+
+/* Avoid unexpected sizing on all elements. */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+/* CSS styling for before/after/avoid. */
+.before {
+  page-break-before: always;
+}
+.after {
+  page-break-after: always;
+}
+.avoid {
+  page-break-inside: avoid;
+}
+/* Big and bigger elements. */
+.big {
+  height: 10.9in;
+  background-color: yellow;
+  border: 1px solid black;
+}
+.fullpage {
+  height: 11in;
+  background-color: fuchsia;
+  border: 1px solid black;
+}
+.bigger {
+  height: 11.1in;
+  background-color: aqua;
+  border: 1px solid black;
+}
+/* Table styling */
+table {
+  border-collapse: collapse;
+}
+td {
+  border: 1px solid black;
+}

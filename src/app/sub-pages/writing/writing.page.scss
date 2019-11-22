@@ -1,0 +1,105 @@
+:host {
+  --ion-color-primary: #60166c;
+  --ion-color-primary-rgb: 255, 206, 0;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #60166c;
+  --ion-color-primary-tint: #60166c;
+  --ion-font-family: "OpenSans";
+
+  .divider {
+    --background: #eeeeee;
+  }
+
+  .textHeader {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .textSubHeader {
+    font-weight: bold;
+    font-size: 15px;
+  }
+
+  .noColor {
+    --background: rgba(255, 255, 255, 0);
+  }
+
+  .noColor2 {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background: rgba(255, 255, 255, 0);
+  }
+
+  .whiteColor {
+    --background: #ffffff;
+  }
+
+  .whiteColor2 {
+    background: #ffffff;
+  }
+
+  .dataHeader {
+    background: rgba(226, 5, 5, 0);
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .header {
+    --background: #ffffff;
+  }
+
+  .subHeader {
+    --background: #ffffff;
+  }
+
+  .dataHeaderNonSub {
+    --background: rgba(255, 255, 255, 0.719);
+    // color: #000000;
+  }
+
+  .chipColor {
+    border-color: #60166c;
+  }
+
+  .center {
+    text-align: center;
+  }
+  .scrolling-wrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .chipColor {
+      display: inline-block;
+      border-color: #60166c;
+    }
+  }
+
+  .input {
+    width: 100px;
+  }
+
+  .fileInput {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .fileInput label {
+    color: #717171;
+    background-color: white;
+    display: inline-block;
+    cursor: pointer;
+    padding: 0.5em 1em;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+}

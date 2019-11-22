@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title style="padding-left: 15px;">Report Preview</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeTextEditor()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-fab *ngIf="from == 'writing'" horizontal="end" vertical="bottom" (click)="presentActionSheet()">
+    <ion-fab-button>
+      <ion-icon name="checkmark"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+<ion-content class="A4">
+  <!-- Set "A5", "A4" or "A3" for class name -->
+  <!-- Set also "landscape" if you need -->
+  <!-- Each sheet element should have the class "sheet" -->
+  <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
+
+  <!-- Write HTML just like a web page -->
+  <article class="sheet padding-10mm">
+    <div id="report">
+      <img class="displayed" src="../assets/images/uitm-logo-full.svg" />
+      <div class="frontPage">
+        <br />
+        <br />
+        <br />
+        <h1>{{ user.faculty }}</h1>
+        <br />
+        <h1>UNIVERSITI TEKNOLOGI MARA</h1>
+        <br />
+        <hr width="95%" size="5" noshade />
+        <br />
+        <h1>{{ groupDetail.courseName }}</h1>
+        <h1>({{ groupDetail.courseCode }})</h1>
+        <br />
+        <br />
+        <h1>{{ report.title }}</h1>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="table">
+          <p align="left">BY:</p>
+          <br />
+          <table CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="2">
+            <tr>
+              <td BGCOLOR="#CCCCCC">NAME</td>
+            </tr>
+            <tr>
+              <td>{{ user.fullName }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <p id="headers"></p>
+    </div>
+  </article>
+</ion-content>

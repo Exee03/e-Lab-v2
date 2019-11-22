@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar class="my-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Sign Up</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row
+      justify-content-center
+      align-items-center
+      style="height: 100%; flex-direction: column"
+    >
+      <h1>e-Lab</h1>
+      <ion-col col-auto>
+        <table align="center">
+          <tr>
+            <td>
+              <ion-icon name="mail" size="large"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label position="floating">Email</ion-label>
+                <ion-input
+                  clearInput
+                  type="email"
+                  [(ngModel)]="email"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="lock" size="large"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input
+                  class="item-input"
+                  clearInput
+                  type="password"
+                  [(ngModel)]="password"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="key" size="large"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label position="floating">Confirm Password</ion-label>
+                <ion-input
+                  class="item-input"
+                  clearInput
+                  type="password"
+                  [(ngModel)]="confirmPassword"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <table align="center">
+          <tr>
+            <td>
+              <ion-button
+                color="warning"
+                shape="round"
+                expand="block"
+                (click)="register()"
+                >SIGN UP</ion-button
+              >
+            </td>
+          </tr>
+        </table>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+

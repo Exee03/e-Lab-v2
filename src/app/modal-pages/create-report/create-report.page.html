@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title style="padding-left: 15px;">{{ from }} Report</ion-title>
+    <ion-buttons slot="end" color="primary">
+      <ion-button (click)="closeCreateReport()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row
+      justify-content-center
+      align-items-center
+      style="height: 100%; flex-direction: column"
+    >
+      <ion-col col-auto>
+        <table align="center">
+          <tr>
+            <td>
+              <ion-title style="padding-top: 30px; text-align: center;">{{ course.name }}</ion-title>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-title style="padding-top: 20px; text-align: center">{{ group.name }}</ion-title>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-item style="padding-top: 20px; padding-bottom: 30px;">
+                <ion-label position="floating">Title of Report</ion-label>
+                <ion-input
+                  clearInput
+                  type="text"
+                  [(ngModel)]="title"
+                  autocomplete="off"
+                  autocorrect="off"
+                  placeholder="eg: Basic Electronic"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+        </table>
+        <table align="center">
+          <tr>
+            <td>
+              <ion-button
+                color="warning"
+                shape="round"
+                expand="block"
+                style="width: 30vmin;"
+                (click)="createReport()"
+                >Create</ion-button
+              >
+            </td>
+          </tr>
+        </table>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

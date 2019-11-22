@@ -1,0 +1,94 @@
+<ion-header id="headerVerify" *ngIf="!hasVerified" class="hasVerified"
+  >Your email still not verified. Please check your email for email
+  verification.</ion-header
+>
+
+<ion-header #header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-grid class="ion-padding-start">
+      <ion-label>
+        <p style="font-size: 5vmin; padding-left: 30px;">{{ role }}</p>
+      </ion-label>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-grid
+      ><ion-label>
+        <h2 style="font-size: 10vmin; font-weight: bold; padding-left: 30px;">
+          Dashboard
+        </h2>
+      </ion-label></ion-grid
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-content
+  [scrollEvents]="true"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollStart)="scrollStart(header)"
+  forceOverscroll="true"
+>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="auto" *ngFor="let card of cards">
+        <ion-card
+          [routerDirection]="'root'"
+          [routerLink]="[card.url]"
+          color="soft"
+        >
+          <ion-card-header style="padding-bottom: unset;">
+            <ion-card-title>
+              <ion-item
+                lines="none"
+                style="--background: rgba(255, 255, 255, 0);"
+              >
+                <ion-label
+                  color="light"
+                  style="font-size: 30px; font-weight: bold; padding-right: 20px; white-space: pre-wrap;"
+                  >{{ card.title }}</ion-label
+                >
+                <ion-icon
+                  [name]="card.icon"
+                  style="zoom: 2;"
+                  color="light"
+                ></ion-icon>
+              </ion-item>
+              <ion-item
+                lines="none"
+                style="--background: rgba(255, 255, 255, 0);"
+              >
+                <ion-label
+                  color="light"
+                  style="font-size: 20px; padding-right: 20px;"
+                >
+                  {{ card.subtitle }}
+                </ion-label>
+              </ion-item>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content style="padding-top: unset; padding-bottom: unset;">
+            <div class="divider" color="light"></div>
+            <ion-item
+              slot="end"
+              lines="none"
+              style="--background: rgba(255, 255, 255, 0)"
+            >
+              <ion-label
+                color="light"
+                style="text-align: right; font-size: small;"
+                >{{ card.footer }}</ion-label
+              >
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

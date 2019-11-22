@@ -1,0 +1,13 @@
+.select {
+  --color: var(--ion-color-light);
+  --background: var(--ion-color-primary);
+}
+
+.deselect {
+  --color: var(--ion-color-primary);
+  --background: var(--ion-color-dark);
+}
+
+.roundBox {
+  border-radius: 10px;
+}

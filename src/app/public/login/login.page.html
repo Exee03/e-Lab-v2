@@ -1,0 +1,121 @@
+<ion-content padding>
+  <ion-grid>
+    <ion-row
+      justify-content-center
+      align-items-center
+      style="height: 100%; flex-direction: column"
+    >
+      <ion-img class="ion-padding" src="../../../assets/custom-icons/app-logo-white.png" style="height: 50vmin"></ion-img>
+      <ion-col col-auto>
+        <table align="center">
+          <tr>
+            <td>
+              <ion-icon name="mail" size="large"></ion-icon>
+            </td>
+            <td>
+              <ion-item class="transparent">
+                <ion-label position="floating" color="light">Email</ion-label>
+                <ion-input
+                  color="light"
+                  clearInput
+                  type="email"
+                  [(ngModel)]="email"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="lock" size="large"></ion-icon>
+            </td>
+            <td>
+              <ion-item class="transparent">
+                <ion-label position="floating" color="light">Password</ion-label>
+                <ion-input
+                  color="light"
+                  clearInput
+                  (keyup.enter)="login()"
+                  type="password"
+                  [(ngModel)]="password"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td align="right">
+              <ion-tab-button href="https://example.com">
+                <ion-label><br />FORGOT PASSWORD?</ion-label>
+              </ion-tab-button>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <table align="center">
+          <tr>
+            <td>
+              <ion-button
+                (click)="login()"
+                expand="block"
+                shape="round"
+                color="warning"
+                >SIGN IN</ion-button
+              >
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <p style="font-size: 1vmax;">
+                --------------------------- OR CONNECT WITH
+                ---------------------------
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-button
+                (click)="google()"
+                expand="block"
+                shape="round"
+                color="light"
+              >
+                <ion-icon slot="start" name="google-color"></ion-icon>
+                GOOGLE
+              </ion-button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <ion-label><br />DON'T HAVE AN ACCOUNT?</ion-label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-button
+                fill="outline"
+                color="warning"
+                shape="round"
+                expand="block"
+                routerLink="/register"
+                routerDirection="forward"
+                >SIGN UP</ion-button
+              >
+            </td>
+          </tr>
+          <tr>
+            <div style="height: 50px;"></div>
+          </tr>
+        </table>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

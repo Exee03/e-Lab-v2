@@ -1,0 +1,454 @@
+<ion-header style="z-index: 20;" #title class="header">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="list-report"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ reportTitle }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon (click)="refresh()" slot="end" name="refresh"></ion-icon>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-icon
+        (click)="preview()"
+        class="ion-padding"
+        slot="end"
+        name="eye"
+      ></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content
+  class="divider"
+  [scrollEvents]="true"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollStart)="scrollStart(title)"
+  forceOverscroll="true"
+>
+  <ion-row>
+    <ion-col>
+      <ion-chip class="noColor" (click)="addHeader()">
+        <ion-icon name="add"></ion-icon>
+        <ion-label class="textHeader">Header</ion-label>
+      </ion-chip>
+      <ion-chip *ngIf="addingHeader">
+        <ion-input
+          [(ngModel)]="nameHeader"
+          placeholder="eg: Introduction"
+          clearInput
+          type="text"
+          autocomplete="off"
+          autocorrect="off"
+        ></ion-input>
+      </ion-chip>
+      <ion-chip
+        color="primary"
+        outline="true"
+        class="chipColor"
+        *ngIf="addingHeader"
+        (click)="saveHeader()"
+      >
+        <ion-icon name="save"></ion-icon>
+        <ion-label>SAVE</ion-label>
+      </ion-chip>
+    </ion-col>
+  </ion-row>
+  <ion-reorder-group
+    (ionItemReorder)="reorderHeader($event)"
+    disabled="false"
+    id="idHeader"
+  >
+    <ion-list *ngFor="let item of header" class="noColor2">
+      <ion-item-sliding
+        *ngIf="!item.isEdit"
+        (click)="openHeader(item.id)"
+        lines="none"
+        class="header"
+        #slider1
+      >
+        <ion-item lines="none">
+          <ion-label>{{ item.name }}</ion-label>
+        </ion-item>
+        <ion-item-options side="end" (click)="closeSlider(slider1)">
+          <ion-item-option (click)="editHeader(item.id)" color="soft"
+            ><ion-icon name="create" style="zoom:1.5;"></ion-icon
+          ></ion-item-option>
+          <ion-item-option (click)="deleteHeader(item.id)" color="soft"
+            ><ion-icon name="trash" style="zoom:1.5;"></ion-icon
+          ></ion-item-option>
+          <ion-item-option color="soft">
+            <ion-reorder slot="end"></ion-reorder>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+
+      <ion-item *ngIf="item.isEdit">
+        <ion-input
+          slot="start"
+          type="text"
+          placeholder="{{ item.name }}"
+          [(ngModel)]="item.name"
+        ></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="updateHeaderName(item.uid)">
+            <ion-icon slot="icon-only" name="save" color="primary"></ion-icon>
+          </ion-button>
+          <ion-button (click)="cancelUpdateHeaderName(item.uid)">
+            <ion-icon slot="icon-only" name="close" color="primary"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+
+      <div *ngIf="item.isExpanded">
+        <div class="scrolling-wrapper">
+          <table align="center">
+            <ion-chip
+              color="primary"
+              outline="true"
+              class="chipColor"
+              (click)="addSubHeader(item.uid)"
+            >
+              <ion-icon name="funnel"></ion-icon>
+              <ion-label>SubHeader</ion-label>
+            </ion-chip>
+            <ion-chip
+              color="primary"
+              outline="true"
+              class="chipColor"
+              (click)="openTextEditor(item.uid)"
+            >
+              <ion-icon name="list"></ion-icon>
+              <ion-label>Text</ion-label>
+            </ion-chip>
+            <ion-chip
+              *ngIf="!isNative"
+              color="primary"
+              outline="true"
+              class="chipColor"
+            >
+              <input
+                (change)="addImage($event, item.uid)"
+                type="file"
+                name="file"
+                id="fileData"
+                class="fileInput"
+              />
+              <label for="fileData"
+                ><ion-icon
+                  name="image"
+                  style="zoom: 1; padding-right: 5px;"
+                ></ion-icon
+                >Picture</label
+              >
+            </ion-chip>
+            <!-- <ion-chip
+              (click)="addImageNative(item.uid)"
+              *ngIf="isNative"
+              color="primary"
+              outline="true"
+              class="chipColor"
+            >
+              <ion-icon name="image" style="zoom: 1;"></ion-icon>
+              <ion-label for="file">Picture</ion-label>
+            </ion-chip> -->
+          </table>
+        </div>
+
+        <table align="center">
+          <ion-chip *ngIf="addingSubHeader">
+            <ion-input
+              [(ngModel)]="nameSubHeader"
+              placeholder="eg: Objective"
+              clearInput
+              type="text"
+              autocomplete="off"
+              autocorrect="off"
+            ></ion-input>
+          </ion-chip>
+          <ion-chip
+            color="primary"
+            outline="true"
+            class="chipColor"
+            *ngIf="addingSubHeader"
+            (click)="saveSubHeader(item.id)"
+          >
+            <ion-icon name="save"></ion-icon>
+            <ion-label>SAVE</ion-label>
+          </ion-chip>
+        </table>
+        <ion-reorder-group
+          (ionItemReorder)="reorderHeaderData($event, item.uid)"
+          disabled="false"
+          id="idHeaderData"
+        >
+          <ion-list *ngFor="let subItem of headerData" class="dataHeader">
+            <div *ngIf="subItem.sub" class="noColor2">
+              <ion-list
+                *ngFor="let itemSubHeader of subHeader"
+                class="noColor2"
+              >
+                <ion-card
+                  *ngIf="subItem.uid == itemSubHeader.uid"
+                  class="subHeader"
+                >
+                  <ion-item-sliding #slider2>
+                    <ion-item
+                      lines="none"
+                      *ngIf="!itemSubHeader.isEdit"
+                      (click)="openSubHeader(itemSubHeader.uid)"
+                    >
+                      <ion-label>{{ itemSubHeader.name }}</ion-label>
+                    </ion-item>
+
+                    <ion-item-options side="end" (click)="closeSlider(slider2)">
+                      <ion-item-option
+                        color="soft"
+                        (click)="editSubHeader(itemSubHeader.uid)"
+                        ><ion-icon name="create" style="zoom:1.5;"></ion-icon
+                      ></ion-item-option>
+                      <ion-item-option
+                        color="soft"
+                        (click)="deleteSubHeader(item, itemSubHeader)"
+                        ><ion-icon name="trash" style="zoom:1.5;"></ion-icon
+                      ></ion-item-option>
+                      <ion-item-option color="soft">
+                        <ion-reorder slot="end"></ion-reorder>
+                      </ion-item-option>
+                    </ion-item-options>
+                  </ion-item-sliding>
+                  <ion-item lines="none" *ngIf="itemSubHeader.isEdit">
+                    <ion-input
+                      type="text"
+                      placeholder="{{ itemSubHeader.name }}"
+                      [(ngModel)]="itemSubHeader.name"
+                    ></ion-input>
+                    <ion-buttons slot="end">
+                      <ion-button
+                        (click)="updateSubHeaderName(itemSubHeader.uid)"
+                      >
+                        <ion-icon
+                          slot="icon-only"
+                          name="save"
+                          color="primary"
+                        ></ion-icon>
+                      </ion-button>
+                      <ion-button
+                        (click)="cancelUpdateSubHeaderName(itemSubHeader.uid)"
+                      >
+                        <ion-icon
+                          slot="icon-only"
+                          name="close"
+                          color="primary"
+                        ></ion-icon>
+                      </ion-button>
+                    </ion-buttons>
+                  </ion-item>
+                </ion-card>
+                <div
+                  *ngIf="
+                    itemSubHeader.isExpanded && subItem.id == itemSubHeader.id
+                  "
+                >
+                  <table align="center">
+                    <tr>
+                      <td>
+                        <ion-chip
+                          color="primary"
+                          outline="true"
+                          class="chipColor"
+                          (click)="openTextEditor(item.uid, subItem.uid)"
+                        >
+                          <ion-icon name="list"></ion-icon>
+                          <ion-label>Text</ion-label>
+                        </ion-chip>
+                      </td>
+                      <td>
+                        <ion-chip
+                          *ngIf="!isNative"
+                          color="primary"
+                          outline="true"
+                          class="chipColor"
+                        >
+                          <input
+                            (change)="addImage($event, item.uid, subItem.uid)"
+                            type="file"
+                            name="file"
+                            id="fileSubData"
+                            class="fileInput"
+                          />
+                          <label for="fileSubData"
+                            ><ion-icon
+                              name="image"
+                              style="zoom: 1; padding-right: 5px;"
+                            ></ion-icon
+                            >Picture</label
+                          >
+                        </ion-chip>
+                        <!-- <ion-chip
+                          (click)="addImageNative(item.uid, subItem.uid)"
+                          *ngIf="isNative"
+                          color="primary"
+                          outline="true"
+                          class="chipColor"
+                        >
+                          <ion-icon name="image" style="zoom: 1;"></ion-icon>
+                          <ion-label for="file">Picture</ion-label>
+                        </ion-chip> -->
+                      </td>
+                    </tr>
+                  </table>
+
+                  <ion-reorder-group
+                    (ionItemReorder)="reorderSubHeaderData($event, subItem.uid)"
+                    disabled="false"
+                    id="idSubHeaderData"
+                  >
+                    <ion-list
+                      *ngFor="let subItemSubHeader of subHeaderData"
+                      class="dataHeader"
+                    >
+                      <ion-card>
+                        <ion-item-sliding #slider3>
+                          <ion-item
+                            lines="none"
+                            *ngIf="!item.isEdit"
+                            class="dataHeaderNonSub"
+                          >
+                            <ion-card-content
+                              *ngIf="subItemSubHeader.type == 'text'"
+                            >
+                              <div [innerHTML]="subItemSubHeader.data"></div>
+                            </ion-card-content>
+                            <table align="center">
+                              <ion-card-content
+                                *ngIf="subItemSubHeader.type == 'image'"
+                              >
+                                <ion-img
+                                  src="{{ subItemSubHeader.data }}"
+                                  style="width: 30vmax;"
+                                ></ion-img>
+                              </ion-card-content>
+                            </table>
+                          </ion-item>
+                          <ion-item-options side="end" (click)="closeSlider(slider3)">
+                            <ion-item-option
+                              *ngIf="subItemSubHeader.type != 'image'"
+                              color="soft"
+                              (click)="
+                                openTextEditor(
+                                  item.uid,
+                                  subItem.uid,
+                                  subItemSubHeader
+                                )
+                              "
+                              ><ion-icon
+                                name="create"
+                                style="zoom:1.5;"
+                              ></ion-icon
+                            ></ion-item-option>
+                            <ion-item-option
+                              color="soft"
+                              (click)="
+                                deleteSubHeaderData(
+                                  subItem.uid,
+                                  subItemSubHeader.uid
+                                )
+                              "
+                              ><ion-icon
+                                name="trash"
+                                style="zoom:1.5;"
+                              ></ion-icon
+                            ></ion-item-option>
+                            <ion-item-option color="soft">
+                              <ion-reorder slot="end"></ion-reorder>
+                            </ion-item-option>
+                          </ion-item-options>
+                        </ion-item-sliding>
+                      </ion-card>
+                    </ion-list>
+                  </ion-reorder-group>
+                </div>
+              </ion-list>
+            </div>
+            <div *ngIf="!subItem.sub">
+              <ion-card>
+                <ion-item-sliding #slider4>
+                  <ion-item
+                    lines="none"
+                    *ngIf="!item.isEdit"
+                    class="dataHeaderNonSub"
+                  >
+                    <ion-card-content *ngIf="subItem.type == 'text'">
+                      <div [innerHTML]="subItem.data"></div>
+                    </ion-card-content>
+                    <table align="center">
+                      <ion-card-content *ngIf="subItem.type == 'image'">
+                        <ion-img
+                          src="{{ subItem.data }}"
+                          style="width: 30vmax;"
+                        ></ion-img>
+                      </ion-card-content>
+                    </table>
+                  </ion-item>
+                  <ion-item-options side="end" (click)="closeSlider(slider4)">
+                    <ion-item-option
+                      *ngIf="subItem.type != 'image'"
+                      (click)="openTextEditor(item.uid, '', subItem)"
+                      color="soft"
+                      ><ion-icon name="create" style="zoom:1.5;"></ion-icon
+                    ></ion-item-option>
+                    <!-- <div
+                      style="
+                        background: #BE3FCB;
+                        display: flex;
+                        align-items: center;
+                        height: inherit;
+                        border: 1px solid red;"
+                    >
+                      <input
+                        (change)="addImage($event, item.uid)"
+                        type="file"
+                        name="file"
+                        id="file"
+                        class="fileInput"
+                      />
+                      <label for="file"
+                        ><ion-icon
+                          name="image"
+                          style="zoom: 1.5; padding-right: 5px;"
+                        ></ion-icon
+                        ></label
+                      >
+                    </div> -->
+                    <!-- <input
+                      (change)="addImage($event, item.uid)"
+                      type="file"
+                      name="file"
+                      id="file"
+                      class="fileInput"
+                      style=" margin: 10px"
+                    />
+                    <ion-item-option for="file" color="soft"
+                      ><ion-icon
+                        name="image"
+                        style="zoom: 1.5; padding-right: 5px;"
+                      ></ion-icon
+                    ></ion-item-option> -->
+                    <ion-item-option
+                      color="soft"
+                      (click)="deleteHeaderData(item.id, subItem.uid)"
+                      ><ion-icon name="trash" style="zoom:1.5;"></ion-icon
+                    ></ion-item-option>
+                    <ion-item-option color="soft">
+                      <ion-reorder slot="end"></ion-reorder>
+                    </ion-item-option>
+                  </ion-item-options>
+                </ion-item-sliding>
+              </ion-card>
+            </div>
+          </ion-list>
+        </ion-reorder-group>
+      </div>
+    </ion-list>
+  </ion-reorder-group>
+</ion-content>

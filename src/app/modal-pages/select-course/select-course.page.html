@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="soft">
+      <div align="center">
+          <h1>Hi !</h1>
+          <br />
+          <br />
+          <h3>{{ username }}</h3>
+          <br />
+          <p>Choose your subject before we begin.</p>
+        </div>
+  </ion-toolbar>
+</ion-header>
+<ion-toolbar color="soft">
+    <ion-searchbar
+    mode="ios"
+    placeholder="Search by name or code of course"
+    inputmode="text"
+    type="text"
+    (ionChange)="filterCourse($event)"
+    [debounce]="250"
+    animated="true"
+    cancel-button-icon
+  ></ion-searchbar>
+</ion-toolbar>
+
+<ion-content class="ion-padding" align="center">
+  <ion-list *ngFor="let course of courses | filterCourse: textFilter">
+    <ion-item class="roundBox" color="primary" (click)="selectCourse(course)">
+      <ion-label>
+        <h2>{{ course.code }}</h2>
+        <p style="font-size: small;">{{ course.name }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item
+      *ngIf="course.showGroup"
+      text-center
+      style="border-radius: 10px; margin-top: 10px;"
+      color="dark"
+      lines="none"
+    >
+      <table align="center">
+        <tr>
+          <td *ngFor="let group of course.groups">
+            <ion-chip
+              *ngIf="group.selected"
+              (click)="selectGroup(course, group)"
+              outline="false"
+              class="select"
+            >
+              <ion-label>{{ group.name }}</ion-label>
+            </ion-chip>
+            <ion-chip
+              *ngIf="!group.selected"
+              (click)="selectGroup(course, group)"
+              outline="false"
+              class="deselect"
+            >
+              <ion-label>{{ group.name }}</ion-label>
+            </ion-chip>
+          </td>
+        </tr>
+      </table>
+    </ion-item>
+  </ion-list>
+</ion-content>
