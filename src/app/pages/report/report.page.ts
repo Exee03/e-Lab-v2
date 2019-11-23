@@ -26,7 +26,7 @@ export class ReportPage implements OnInit {
   hasVerified = true;
   report: Report[] = [];
   isEmpty = true;
-  unsubscribeReport$ = new Subject<void>();
+  unsubscribeListReport$ = new Subject<void>();
 
   constructor(
     private modalController: ModalController,
@@ -43,7 +43,7 @@ export class ReportPage implements OnInit {
         this.user = user;
       });
       this.isEmpty = (studentService.reports.value.length === 0) ? true : false;
-      this.studentService.reports.pipe(takeUntil(this.unsubscribeReport$)).subscribe(reports => {
+      this.studentService.reports.pipe(takeUntil(this.unsubscribeListReport$)).subscribe(reports => {
         this.report = [];
         reports.forEach(report => {
           const course = this.commonService.groupDetails.value.find(gd => gd.courseUid === report.course);
@@ -64,8 +64,8 @@ export class ReportPage implements OnInit {
 
   // tslint:disable-next-line: use-lifecycle-interface
   ngOnDestroy() {
-    this.unsubscribeReport$.next();
-    this.unsubscribeReport$.complete();
+    this.unsubscribeListReport$.next();
+    this.unsubscribeListReport$.complete();
   }
 
   async logScrolling($event) {

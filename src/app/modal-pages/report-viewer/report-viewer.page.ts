@@ -38,7 +38,8 @@ export class ReportViewerPage implements OnInit {
     this.data = this.navParams.get('data');
     this.from = this.navParams.get('from');
     this.user = this.navParams.get('user');
-    this.groupDetail = (this.from === 'writing') ? this.studentService.selectedGroupDetail : this.lecturerService.selectedGroupDetail;
+    // tslint:disable-next-line: max-line-length
+    this.groupDetail = (this.from === 'writing' || this.from === 'my-report') ? this.studentService.selectedGroupDetail : this.commonService.selectedGroupDetail;
   }
 
   ngOnInit() {

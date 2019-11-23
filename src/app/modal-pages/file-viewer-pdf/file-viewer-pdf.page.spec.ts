@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FileViewPage } from './file-view.page';
+import { FileViewerPdfPage } from './file-viewer-pdf.page';
 
-describe('FileViewPage', () => {
-  let component: FileViewPage;
-  let fixture: ComponentFixture<FileViewPage>;
+describe('FileViewerPdfPage', () => {
+  let component: FileViewerPdfPage;
+  let fixture: ComponentFixture<FileViewerPdfPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FileViewPage ],
+      declarations: [ FileViewerPdfPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FileViewPage);
+    fixture = TestBed.createComponent(FileViewerPdfPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,9 +1,78 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>settings</ion-title>
+<ion-header id="headerVerify" *ngIf="!hasVerified" class="hasVerified"
+  >Your email still not verified. Please check your email for email
+  verification.</ion-header
+>
+
+<ion-header #header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="editProfile()">
+    <ion-icon name="create"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 
+<ion-content
+  [scrollEvents]="true"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollStart)="scrollStart(header)"
+  forceOverscroll="true"
+>
+  <ion-grid fixed>
+    <ion-card class="ion-margin" color="soft" style="border-radius: 30px;">
+      <ion-row justify-content-center align-items-center>
+        <ion-col style="padding: 30px;">
+          <table align="center">
+            <ion-avatar style="zoom: 2;">
+              <img src="{{ photoURL }}" />
+            </ion-avatar>
+          </table>
+        </ion-col>
+        <ion-col style="padding: 30px;">
+          <ion-row class="ion-padding-bottom">
+            <ion-label
+              style="font-weight: bold; font-size: xx-large; padding-left: 16px;"
+              >{{ roleLabel }}</ion-label
+            >
+          </ion-row>
+          <ion-row>
+            <ion-item
+              lines="none"
+              style="--background: rgba(255, 255, 255, 0); width: inherit;"
+            >
+              <ion-label
+                class="ion-no-margin"
+                color="light"
+                style=" white-space: nowrap; overflow: hidden;
+                text-overflow: ellipsis;"
+              >
+                <h2>{{ fullName }}</h2>
+                <br />
+                <h2>{{ email }}</h2>
+              </ion-label>
+            </ion-item>
+          </ion-row>
+          <ion-row class="ion-justify-content-end">
+            <ion-col>
+              <ion-button
+                color="light"
+                size="small"
+                fill="outline"
+                shape="round"
+                (click)="verifyEmail()"
+              >
+                Verify Email
+              </ion-button></ion-col
+            >
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-grid>
 </ion-content>

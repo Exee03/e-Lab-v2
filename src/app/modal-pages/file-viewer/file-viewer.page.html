@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title style="padding-left: 15px;">File Viewer</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeFileView()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="pages != null">
+  <ion-card *ngFor="let page of pages">
+    <ion-card-content>
+      <img [src]="page.url" alt="" />
+    </ion-card-content>
+    <ion-card-header class="ion-text-center">
+      Page {{ page.num }} of {{ pages.length }}
+    </ion-card-header>
+  </ion-card>
+</ion-content>

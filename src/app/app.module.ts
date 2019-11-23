@@ -14,17 +14,20 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
+import 'firebase/analytics';
 
 firebase.initializeApp(environment.firebase);
-firebase.analytics();
+// firebase.analytics();
 
-import { FileViewPageModule } from './modal-pages/file-view/file-view.module';
 import { TextEditorPageModule } from './modal-pages/text-editor/text-editor.module';
 import { ImageViewerPageModule } from './modal-pages/image-viewer/image-viewer.module';
 import { ReportViewerPageModule } from './modal-pages/report-viewer/report-viewer.module';
 import { SelectCoursePageModule } from './modal-pages/select-course/select-course.module';
 import { CreateReportPageModule } from './modal-pages/create-report/create-report.module';
+import { FileViewerPageModule } from './modal-pages/file-viewer/file-viewer.module';
+import { FileViewerPdfPageModule } from './modal-pages/file-viewer-pdf/file-viewer-pdf.module';
+import { EditProfilePageModule } from './modal-pages/edit-profile/edit-profile.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,12 +41,14 @@ import { CreateReportPageModule } from './modal-pages/create-report/create-repor
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    FileViewPageModule,
+    FileViewerPageModule,
+    FileViewerPdfPageModule,
     TextEditorPageModule,
     ImageViewerPageModule,
     ReportViewerPageModule,
     SelectCoursePageModule,
-    CreateReportPageModule
+    CreateReportPageModule,
+    EditProfilePageModule
   ],
   providers: [
     StatusBar,

@@ -11,13 +11,18 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     loadChildren: './pages/menu/menu.module#MenuPageModule'
   },
-  { path: 'file-view', loadChildren: './modal-pages/file-view/file-view.module#FileViewPageModule' },
   { path: 'writing', loadChildren: './sub-pages/writing/writing.module#WritingPageModule' },
   { path: 'text-editor', loadChildren: './modal-pages/text-editor/text-editor.module#TextEditorPageModule' },
   { path: 'image-viewer', loadChildren: './modal-pages/image-viewer/image-viewer.module#ImageViewerPageModule' },
   { path: 'report-viewer', loadChildren: './modal-pages/report-viewer/report-viewer.module#ReportViewerPageModule' },
   { path: 'select-course', loadChildren: './modal-pages/select-course/select-course.module#SelectCoursePageModule' },
   { path: 'create-report', loadChildren: './modal-pages/create-report/create-report.module#CreateReportPageModule' },
+  { path: 'my-report-detail', loadChildren: './sub-pages/my-report-detail/my-report-detail.module#MyReportDetailPageModule' },
+  { path: 'select-file', loadChildren: './sub-pages/select-file/select-file.module#SelectFilePageModule' },
+  { path: 'list-file', loadChildren: './sub-pages/list-file/list-file.module#ListFilePageModule' },
+  { path: 'file-viewer-pdf', loadChildren: './modal-pages/file-viewer-pdf/file-viewer-pdf.module#FileViewerPdfPageModule' },
+  { path: 'file-viewer', loadChildren: './modal-pages/file-viewer/file-viewer.module#FileViewerPageModule' },
+  { path: 'edit-profile', loadChildren: './modal-pages/edit-profile/edit-profile.module#EditProfilePageModule' },
 
 ];
 

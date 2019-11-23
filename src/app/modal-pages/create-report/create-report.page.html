@@ -44,21 +44,12 @@
             </td>
           </tr>
         </table>
-        <table align="center">
-          <tr>
-            <td>
-              <ion-button
-                color="warning"
-                shape="round"
-                expand="block"
-                style="width: 30vmin;"
-                (click)="createReport()"
-                >Create</ion-button
-              >
-            </td>
-          </tr>
-        </table>
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
+<ion-footer color="primary">
+  <ion-button expand="full" (click)="createReport()">
+    CREATE
+  </ion-button>
+</ion-footer>

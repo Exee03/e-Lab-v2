@@ -1,0 +1,124 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title style="padding-left: 15px;">Edit Profile</ion-title>
+    <ion-buttons slot="end" color="primary">
+      <ion-button (click)="closeEditProfile()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row
+      justify-content-center
+      align-items-center
+      style="height: 100%; flex-direction: column"
+    >
+      <ion-avatar style="zoom: 2;">
+        <img src="{{user.photoURL}}" />
+      </ion-avatar>
+      <ion-col col-auto>
+        <table align="center">
+          <tr>
+            <td>
+              <ion-icon name="person" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label position="floating">Short Name</ion-label>
+                <ion-input
+                  class="item-input"
+                  clearInput
+                  type="text"
+                  [(ngModel)]="user.displayName"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="person" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label position="floating">Full Name</ion-label>
+                <ion-input
+                  class="item-input"
+                  clearInput
+                  type="text"
+                  [(ngModel)]="user.fullName"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="contacts" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label>Faculty</ion-label>
+                <ion-select
+                  [(ngModel)]="user.faculty"
+                  (ionChange)="optionsFn(user.faculty);"
+                >
+                  <ion-select-option
+                    *ngFor="let faculty of faculties"
+                    [value]="faculty.name"
+                    >{{ faculty.name }}</ion-select-option
+                  >
+                </ion-select>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="mail" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label position="floating">Email</ion-label>
+                <ion-input
+                  clearInput
+                  type="email"
+                  [(ngModel)]="user.email"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="call" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label position="floating">Phone Number</ion-label>
+                <ion-input
+                  class="item-input"
+                  clearInput
+                  type="tel"
+                  [(ngModel)]="user.phone"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+        </table>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-footer color="primary">
+  <ion-button expand="full" (click)="update()">
+    UPDATE
+  </ion-button>
+</ion-footer>

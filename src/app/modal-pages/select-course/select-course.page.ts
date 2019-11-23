@@ -7,8 +7,8 @@ import { Group } from 'src/app/models/group';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
-import { FileViewPage } from '../file-view/file-view.page';
 import { CreateReportPage } from '../create-report/create-report.page';
+import { FileViewerPage } from '../file-viewer/file-viewer.page';
 
 @Component({
   selector: 'app-select-course',
@@ -47,7 +47,7 @@ export class SelectCoursePage implements OnInit {
   }
 
   async selectCourse(selectCourse: Course) {
-    if (this.from === 'categories') {
+    if (this.from === 'select-file') {
       this.getFile(selectCourse);
       await this.modalController.dismiss();
     } else {
@@ -85,10 +85,10 @@ export class SelectCoursePage implements OnInit {
       this.selectGroupDetail(course);
       this.router.navigate(['list-file']);
     } else {
-      const category = this.lecturerService.uploadCategory;
+      const category = this.commonService.uploadCategory;
       if (category !== 'Reference') {
-        if (this.lecturerService.files.length !== 0) {
-          const selectedFile = this.lecturerService.files.find(file => file.course === course.uid);
+        if (this.commonService.files.length !== 0) {
+          const selectedFile = this.commonService.files.find(file => file.course === course.uid);
           if (selectedFile === undefined) {
             this.commonService.showToast(`No ${category} file is selected by lecturer !!!`);
           } else {
@@ -105,12 +105,12 @@ export class SelectCoursePage implements OnInit {
   }
 
   private selectGroupDetail(course: Course) {
-    this.lecturerService.selectedGroupDetail = this.commonService.groupDetails.value.find(gd => gd.courseUid === course.uid);
+    this.commonService.selectedGroupDetail = this.commonService.groupDetails.value.find(gd => gd.courseUid === course.uid);
   }
 
   async viewFile(selectedFile) {
     const modal = await this.modalController.create({
-      component: FileViewPage,
+      component: FileViewerPage,
       cssClass: 'wideModal',
       componentProps: {
         pages: selectedFile.page

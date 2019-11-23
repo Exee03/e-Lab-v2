@@ -1,0 +1,255 @@
+<ion-header class="transparent">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons class="ion-padding">
+      <ion-title>List of Files</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!isStudent">
+  <ion-fab-button>
+    <input
+      (change)="onFileSelected($event)"
+      type="file"
+      name="file"
+      id="file"
+      class="fileInput"
+    />
+    <label for="file"
+      ><ion-icon name="document" style="zoom: 2;"></ion-icon
+    ></label>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-content>
+  <div *ngIf="isEmpty">
+    <ion-grid>
+      <ion-row justify-content-center align-items-center style="height: 40vh">
+        <ion-label position="floating">No file in this Course.</ion-label>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <div *ngIf="!isEmpty">
+    <ion-grid
+      no-padding
+      *ngIf="lastPage == '/menu/upload' && category == 'Rubric'"
+    >
+      <ion-row>
+        <ion-col>
+          <ion-content
+            style="height: 50vmin; width: 100%; --background: #f5f5f5;"
+          >
+            <ion-grid *ngIf="!isEmpty" class="ion-align-self-center">
+              <ion-row>
+                <ion-col *ngFor="let file of files">
+                  <div>
+                    <ion-card class="card">
+                      <ion-card-content>
+                        <ion-checkbox
+                          (ionChange)="checkEvent(file)"
+                          color="secondary"
+                          slot="end"
+                          mode="ios"
+                          [(ngModel)]="file.selected"
+                        ></ion-checkbox>
+                        <img
+                          *ngIf="file.firstPage != undefined"
+                          (click)="viewFile(file)"
+                          [src]="file.firstPage"
+                          alt=""
+                        />
+                        <ion-item
+                          lines="none"
+                          class="transparent"
+                          *ngIf="file.firstPage == undefined"
+                        >
+                          <table align="center">
+                            <ion-icon
+                              color="light"
+                              name="timer"
+                              style="zoom: 3;"
+                            ></ion-icon>
+                          </table>
+                        </ion-item>
+                      </ion-card-content>
+                      <ion-card-header>
+                        <ion-card-subtitle style="color: white;"
+                          >Uploaded On:</ion-card-subtitle
+                        >
+                        <ion-card-subtitle
+                          class="ion-text-center"
+                          style="color: white;"
+                          >{{ file.lastUpdate }}
+                        </ion-card-subtitle>
+                      </ion-card-header>
+                    </ion-card>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-content>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <form
+            (ngSubmit)="updateRubric()"
+            class="ion-text-center"
+            style="padding: 20px;"
+          >
+            <ion-label class="ion-padding"><h1>Rubric Form</h1></ion-label>
+            <ion-item>
+              <ion-label *ngIf="selectedRubric != undefined"
+                >PDF file from {{ selectedRubric.lastUpdate }}</ion-label
+              >
+            </ion-item>
+
+            <ion-item-group
+              lines="none"
+              *ngFor="
+                let item of items;
+                let i = index;
+                let f = first;
+                let l = last
+              "
+              color="light"
+            >
+              <ion-item-divider>
+                <ion-label slot="start">Item {{ item.id }}</ion-label>
+                <ion-button slot="end" (click)="addItem()" *ngIf="l">
+                  <ion-icon slot="icon-only" name="add"></ion-icon>
+                </ion-button>
+                <ion-button slot="end" (click)="removeItem(i)" *ngIf="!f">
+                  <ion-icon slot="icon-only" name="remove"></ion-icon>
+                </ion-button>
+              </ion-item-divider>
+
+              <ion-item style="padding-left: 10px;">
+                <ion-label>Text   : </ion-label>
+                <ion-input
+                  id="input"
+                  type="text"
+                  placeholder="Text of the Items"
+                  [(ngModel)]="item.text"
+                  name="itemText_{{ i }}"
+                  required
+                ></ion-input>
+              </ion-item>
+              <ion-item style="padding-left: 10px;">
+                <ion-label>Weight : </ion-label>
+                <ion-input
+                  id="input"
+                  type="number"
+                  placeholder="Weight of the Items"
+                  [(ngModel)]="item.weight"
+                  name="itemWeight_{{ i }}"
+                  required
+                ></ion-input>
+              </ion-item>
+            </ion-item-group>
+            <br />
+            <ion-button text-center type="submit">
+              <ion-icon name="add"></ion-icon>
+              <ion-label>Submit</ion-label>
+            </ion-button>
+          </form>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-grid
+      no-padding
+      *ngIf="lastPage == '/menu/upload' && category == 'Manuals'"
+    >
+      <ion-row *ngIf="!isEmpty" >
+        <ion-col *ngFor="let file of files">
+          <div>
+            <ion-card class="card">
+              <ion-card-content>
+                <ion-checkbox
+                  (ionChange)="checkEvent(file)"
+                  color="secondary"
+                  slot="end"
+                  mode="ios"
+                  [(ngModel)]="file.selected"
+                ></ion-checkbox>
+                <img
+                  *ngIf="file.firstPage != undefined"
+                  (click)="viewFile(file)"
+                  [src]="file.firstPage"
+                  alt=""
+                />
+                <ion-item
+                  lines="none"
+                  class="transparent"
+                  *ngIf="file.firstPage == undefined"
+                >
+                  <table align="center">
+                    <ion-icon
+                      color="light"
+                      name="timer"
+                      style="zoom: 3;"
+                    ></ion-icon>
+                  </table>
+                </ion-item>
+              </ion-card-content>
+              <ion-card-header>
+                <ion-card-subtitle style="color: white;"
+                  >Uploaded On:</ion-card-subtitle
+                >
+                <ion-card-subtitle
+                  class="ion-text-center"
+                  style="color: white;"
+                  >{{ file.lastUpdate }}
+                </ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-grid
+      *ngIf="category == 'Reference'"
+      class="ion-align-self-center"
+    >
+      <ion-row>
+        <ion-col *ngFor="let file of files">
+          <div>
+            <ion-card (click)="viewFile(file)" class="card">
+              <ion-card-content>
+                <img
+                  *ngIf="file.firstPage != undefined"
+                  [src]="file.firstPage"
+                  alt=""
+                />
+                <ion-item
+                  lines="none"
+                  class="transparent"
+                  *ngIf="file.firstPage == undefined"
+                >
+                  <table align="center">
+                    <ion-icon
+                      color="light"
+                      name="timer"
+                      style="zoom: 3;"
+                    ></ion-icon>
+                  </table>
+                </ion-item>
+              </ion-card-content>
+              <ion-card-header>
+                <ion-card-subtitle style="color: white;"
+                  >Uploaded On:</ion-card-subtitle
+                >
+                <ion-card-subtitle class="ion-text-center" style="color: white;"
+                  >{{ file.lastUpdate }}
+                </ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

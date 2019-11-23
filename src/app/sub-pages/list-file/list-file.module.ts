@@ -5,12 +5,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FileViewPage } from './file-view.page';
+import { ListFilePage } from './list-file.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: FileViewPage
+    component: ListFilePage
   }
 ];
 
@@ -21,6 +21,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [FileViewPage]
+  declarations: [ListFilePage]
 })
-export class FileViewPageModule {}
+export class ListFilePageModule {}

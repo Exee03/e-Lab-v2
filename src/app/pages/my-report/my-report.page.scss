@@ -1,0 +1,27 @@
+.divider {
+  padding: 1px;
+  // margin-right: 30px;
+  // margin-left: 30px;
+  max-height: 1px;
+  background: #fff;
+}
+
+.hasVerified {
+  font-size: 15px;
+  color: #892d92;
+  text-align: center;
+  background: #fff;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.overlay {
+  position: fixed;
+  z-index: 20;
+  font-size: 15px;
+  color: #892d92;
+  text-align: center;
+  background: #fff;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}

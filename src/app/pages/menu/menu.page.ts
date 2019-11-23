@@ -4,9 +4,9 @@ import { MenuController, ModalController } from '@ionic/angular';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
-import { FileViewPage } from 'src/app/modal-pages/file-view/file-view.page';
 import { takeUntil } from 'rxjs/operators';
 import { DatabaseService } from 'src/app/services/database/database.service';
+import { FileViewerPage } from 'src/app/modal-pages/file-viewer/file-viewer.page';
 
 @Component({
   selector: 'app-menu',
@@ -85,7 +85,7 @@ export class MenuPage implements OnInit {
 
   async viewRubric() {
     const modal = await this.modalController.create({
-      component: FileViewPage,
+      component: FileViewerPage,
       cssClass: 'wideModal',
       componentProps: {
         // course: this.lecturerService.selectedGroup.courseUid

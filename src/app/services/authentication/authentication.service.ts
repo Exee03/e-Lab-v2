@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { switchMap, takeUntil, first } from 'rxjs/operators';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { switchMap, takeUntil } from 'rxjs/operators';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Platform } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { CommonService } from '../common/common.service';
@@ -10,7 +10,6 @@ import { auth } from 'firebase/app';
 import { DatabaseService } from '../database/database.service';
 import { User } from 'src/app/models/user';
 import { StudentService } from '../student/student.service';
-import { Report } from 'src/app/models/report';
 import { LecturerService } from '../lecturer/lecturer.service';
 import { AdminService } from '../admin/admin.service';
 import { Router } from '@angular/router';
@@ -23,6 +22,8 @@ export class AuthenticationService {
   user$: Observable<User>;
   authenticationState = new BehaviorSubject(false);
   isEmailVerified = new BehaviorSubject(true);
+  enterApp = false;
+  isRegister = false;
 
   constructor(
     private afStore: AngularFirestore,
@@ -39,11 +40,17 @@ export class AuthenticationService {
     this.plt.ready().then(async () => {
       this.checkToken();
       await commonService.getGroupDetails();
-      this.getUser().pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe((user: User) => {
-        if (user) {
-          this.preparingData(user);
-        }
-      });
+      this.getUser();
+      this.getUserData();
+    });
+  }
+
+  private getUserData() {
+    this.user$.pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe((user: User) => {
+      if (user) {
+        this.isEmailVerified.next(this.afAuth.auth.currentUser.emailVerified);
+        this.preparingData(user);
+      }
     });
   }
 
@@ -52,12 +59,14 @@ export class AuthenticationService {
       // tslint:disable-next-line: max-line-length
       this.databaseService.getAllUser().pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe(users => {
         this.adminService.users = users;
+        this.showToast(false, user);
       }, error => this.commonService.showAlertError('Error!', '', error.message));
     } else if (this.isLecturer(user)) {
       // tslint:disable-next-line: max-line-length
       this.databaseService.getAllReportBySubmit().pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe(reports => {
         // tslint:disable-next-line: no-unused-expression
         (reports) ? this.lecturerService.reports = reports : [];
+        this.showToast(false, user);
       }, error => this.commonService.showAlertError('Error!', '', error.message));
     } else {
       // tslint:disable-next-line: max-line-length
@@ -68,22 +77,24 @@ export class AuthenticationService {
         });
         // tslint:disable-next-line: no-unused-expression
         (reports) ? this.studentService.reports.next(reports) : this.studentService.reports.next([]);
+        this.showToast(false, user);
       }, error => this.commonService.showAlertError('Error!', '', error.message));
     }
   }
 
   private getUser() {
-    console.log('getting user');
-    return this.user$ = this.afAuth.authState.pipe(switchMap(user => {
+    this.user$ = this.afAuth.authState.pipe(switchMap(user => {
       if (user) {
         return this.afStore.doc<User>(`users/${user.uid}`).valueChanges();
       } else {
         return of(null);
       }
     }));
+    return this.user$;
   }
 
   async register(email, password) {
+    this.isRegister = true;
     const user = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
     console.log('User UID: ', user.user.uid);
     console.log(user.additionalUserInfo.providerId);
@@ -94,6 +105,10 @@ export class AuthenticationService {
     return this.storage.set('auth-token', user.user.uid).then(res => {
       this.authenticationState.next(true);
     });
+  }
+
+  sentEmailVerification() {
+    return this.afAuth.auth.currentUser.sendEmailVerification();
   }
 
   async google() {
@@ -110,6 +125,7 @@ export class AuthenticationService {
   }
 
   async login(email, password) {
+    this.commonService.showToast('Sign in...');
     // this.commonService.loading(false, 'AuthService-login');
     await this.afAuth.auth
       .signInWithEmailAndPassword(email, password)
@@ -139,6 +155,53 @@ export class AuthenticationService {
     //   displayName: credential.user.displayName,
     //   photoURL
     // };
+  }
+
+  updateLastSeen(user: User) {
+    const userRef = this.afStore.collection('users').doc(user.uid);
+    return userRef.update({ lastSeen: this.commonService.getTime() });
+  }
+
+  saveUserData(user: User) {
+    const userRef: AngularFirestoreDocument<any> = this.afStore.doc(
+      `users/${user.uid}`
+    );
+    const data: User = user;
+    data.roles = {
+      student: true
+    };
+    return userRef.set(data, { merge: true });
+  }
+
+  async showToast(firstTime: boolean, user: User) {
+    let text = '';
+    if (!this.enterApp && !this.isRegister) {
+      this.updateLastSeen(user);
+      // this.analyticsService.setUserId(this.user, this.getRole());
+      // this.analyticsService.logEvent('login-done', {method: this.user.provider});
+      if (firstTime === false) {
+        if (user.provider === 'password') {
+          const username = user.email.split('@', 1).toString();
+          text = `Welcome back, ${username}`;
+        } else {
+          const username = user.displayName;
+          text = `Welcome back, ${username}`;
+        }
+      } else {
+        const username = user.displayName;
+        text = `Hello & Welcome , ${username}`;
+      }
+      // this.commonService.loading(true, 'AuthService-showToast');
+      this.enterApp = true;
+      if (this.isEmailVerified.value !== true) {
+        this.commonService.showAlert(
+          'Oppsss...' ,
+          `Hi ${user.displayName}`,
+          'Your email still not verified. Please check your email for email verification.'
+          );
+      }
+      return this.commonService.showToast(text);
+    }
   }
 
   getRole(user: User): string {
@@ -195,12 +258,14 @@ export class AuthenticationService {
   checkToken() {
     return this.storage.get('auth-token').then(res => {
       if (res) {
+        this.commonService.showToast('Preparing data...');
         this.authenticationState.next(true);
       }
     });
   }
 
   enteringApp(userUid: string) {
+    this.getUserData();
     this.storage.set('auth-token', userUid);
     // this.isEmailVerified.next(this.afAuth.auth.currentUser.emailVerified);
     this.authenticationState.next(true);
@@ -352,6 +417,7 @@ export class AuthenticationService {
       this.databaseService.unsubscribe$.next();
       this.databaseService.unsubscribe$.complete();
       this.storage.remove('auth-token');
+      this.enterApp = false;
       this.authenticationState.next(false);
     });
   }

@@ -8,9 +8,6 @@ import { GroupDetail } from 'src/app/models/group';
 export class LecturerService {
 
   reports: Report[] = [];
-  selectedGroupDetail: GroupDetail;
-  uploadCategory: string;
-  files = [];
 
   constructor() { }
 }

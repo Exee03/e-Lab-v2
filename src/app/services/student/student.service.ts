@@ -7,6 +7,8 @@ import { GroupDetail, Group } from 'src/app/models/group';
 import { CommonService } from '../common/common.service';
 import { Storage } from '@ionic/storage';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { Evaluate } from 'src/app/models/files';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,7 @@ export class StudentService {
   data: Data[] = [];
   downloadURL = new BehaviorSubject<string>(null);
   selectedReport: Report;
+  evaluation: Evaluate;
   isGettingData = new BehaviorSubject(false);
   selectedGroupDetail: GroupDetail;
 
@@ -27,6 +30,7 @@ export class StudentService {
     private databaseService: DatabaseService,
     private commonService: CommonService,
     private storage: Storage,
+    private router: Router,
     private afStorage: AngularFireStorage
   ) { }
 
@@ -43,6 +47,22 @@ export class StudentService {
       this.header = data[0];
       this.subHeader = data[1];
       this.data = data[2];
+    });
+  }
+
+  async getEvaluation(reportUid: string) {
+    this.selectedReport = this.reports.value.find(r => r.uid === reportUid);
+    if (this.selectedReport) {
+      this.getGroupDetail(this.selectedReport.group);
+    }
+    return this.databaseService.getReportDataWithEvaluate(this.selectedReport).subscribe(data => {
+      if (data) {
+        this.header = data[0];
+        this.subHeader = data[1];
+        this.data = data[2];
+        this.evaluation = data[3];
+        this.router.navigate(['my-report-detail']);
+      }
     });
   }
 
