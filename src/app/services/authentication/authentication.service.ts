@@ -58,7 +58,7 @@ export class AuthenticationService {
     if (this.isAdmin(user)) {
       // tslint:disable-next-line: max-line-length
       this.databaseService.getAllUser().pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe(users => {
-        this.adminService.users = users;
+        this.adminService.users.next(users);
         this.showToast(false, user);
       }, error => this.commonService.showAlertError('Error!', '', error.message));
     } else if (this.isLecturer(user)) {

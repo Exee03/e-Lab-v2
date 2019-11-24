@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title style="padding-left: 15px;">{{ from }} Group</ion-title>
+    <ion-buttons slot="end" color="primary">
+        <ion-button (click)="closeGroup()">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-grid>
+      <ion-row
+        justify-content-center
+        align-items-center
+        style="height: 100%; flex-direction: column"
+      >
+        <ion-col col-auto>
+          <table align="center">
+            <tr>
+              <td>
+                <ion-item>
+                  <ion-label position="floating">Group</ion-label>
+                  <ion-input
+                    class="UpperCase"
+                    clearInput
+                    type="text"
+                    [(ngModel)]="group"
+                    autocomplete="off"
+                    autocorrect="off"
+                    placeholder="eg: PEE2001A1"
+                  ></ion-input>
+                </ion-item>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <ion-item>
+                  <ion-label position="floating">Num. of Students</ion-label>
+                  <ion-input
+                    class="item-input"
+                    clearInput
+                    type="number"
+                    [(ngModel)]="student"
+                    autocomplete="off"
+                    autocorrect="off"
+                  ></ion-input>
+                </ion-item>
+              </td>
+            </tr>
+          </table>
+          <br />
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+  <ion-footer color="primary">
+    <ion-button expand="full" (click)="submit()">
+      SUBMIT
+    </ion-button>
+  </ion-footer>

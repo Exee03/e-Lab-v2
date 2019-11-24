@@ -5,24 +5,22 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UserManagementPage } from './user-management.page';
-import { PipesModule } from 'src/app/pipes/pipes.module';
+import { GroupPage } from './group.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: UserManagementPage
+    component: GroupPage
   }
 ];
 
 @NgModule({
   imports: [
-    PipesModule,
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [UserManagementPage]
+  declarations: [GroupPage]
 })
-export class UserManagementPageModule {}
+export class GroupPageModule {}

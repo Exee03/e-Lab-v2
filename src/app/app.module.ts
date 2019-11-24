@@ -28,6 +28,9 @@ import { CreateReportPageModule } from './modal-pages/create-report/create-repor
 import { FileViewerPageModule } from './modal-pages/file-viewer/file-viewer.module';
 import { FileViewerPdfPageModule } from './modal-pages/file-viewer-pdf/file-viewer-pdf.module';
 import { EditProfilePageModule } from './modal-pages/edit-profile/edit-profile.module';
+import { CoursePageModule } from './modal-pages/course/course.module';
+import { GroupPageModule } from './modal-pages/group/group.module';
+import { RolePageModule } from './modal-pages/role/role.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -48,7 +51,10 @@ import { EditProfilePageModule } from './modal-pages/edit-profile/edit-profile.m
     ReportViewerPageModule,
     SelectCoursePageModule,
     CreateReportPageModule,
-    EditProfilePageModule
+    EditProfilePageModule,
+    CoursePageModule,
+    GroupPageModule,
+    RolePageModule
   ],
   providers: [
     StatusBar,

@@ -1,9 +1,59 @@
+<ion-header id="headerVerify" *ngIf="!hasVerified" class="hasVerified"
+  >Your email still not verified. Please check your email for email
+  verification.</ion-header
+>
+
+<ion-header #header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-grid class="ion-padding-start">
+      <ion-label>
+        <p style="font-size: 5vmin; padding-left: 30px;">{{ role }}</p>
+      </ion-label>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
 <ion-header>
-  <ion-toolbar>
-    <ion-title>user-management</ion-title>
+  <ion-toolbar color="primary">
+    <ion-grid
+      ><ion-label>
+        <h2 style="font-size: 10vmin; font-weight: bold; padding-left: 30px;">
+          User Management
+        </h2>
+      </ion-label></ion-grid
+    >
+    <ion-searchbar
+      mode="ios"
+      placeholder="Search by name or email"
+      inputmode="text"
+      type="text"
+      (ionChange)="filterUser($event)"
+      [debounce]="250"
+      animated="true"
+      cancel-button-icon
+    ></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content
+  [scrollEvents]="true"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollStart)="scrollStart(header)"
+  forceOverscroll="true"
+>
+  <ion-list class="ion-padding">
+    <ion-item *ngFor="let user of users | filterUser: textFilter">
+    <ion-label>
+      <h2>{{ user.fullName }}</h2>
+      <p>{{ user.email }}</p>
+    </ion-label>
+    <ion-chip color="primary" mode="ios" outline="true" (click)="changeRole(user)">
+      <ion-label>{{ user.roleLabel }}</ion-label>
+    </ion-chip>
+  </ion-item>
+  </ion-list>
 </ion-content>

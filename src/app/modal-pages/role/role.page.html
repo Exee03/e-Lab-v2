@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title style="padding-left: 15px;"
+      >Change role for {{ user.fullName }}</ion-title
+    >
+    <ion-buttons slot="end">
+      <ion-button (click)="closeChangeRole()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding align="center">
+  <ion-label class="ion-padding-vertical">Choose the role for user:</ion-label>
+  <ion-list style="padding-top: 50px;">
+    <ion-grid>
+      <ion-row
+        justify-content-center
+        align-items-center
+        *ngFor="let role of roles"
+      >
+        <ion-col>
+          <ion-chip
+            color="primary"
+            mode="ios"
+            outline="true"
+            (click)="selectRole(role)"
+          >
+            <ion-label>{{ role }}</ion-label>
+          </ion-chip>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+</ion-content>

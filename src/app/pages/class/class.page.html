@@ -1,9 +1,92 @@
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addCourse()">
+  <ion-fab-button>
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-header id="headerVerify" *ngIf="!hasVerified" class="hasVerified"
+  >Your email still not verified. Please check your email for email
+  verification.</ion-header
+>
+
+<ion-header #header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-grid class="ion-padding-start">
+      <ion-label>
+        <p style="font-size: 5vmin; padding-left: 30px;">{{ role }}</p>
+      </ion-label>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
 <ion-header>
-  <ion-toolbar>
-    <ion-title>class</ion-title>
+  <ion-toolbar color="primary">
+    <ion-grid
+      ><ion-label>
+        <h2 style="font-size: 10vmin; font-weight: bold; padding-left: 30px;">
+          Register Class
+        </h2>
+      </ion-label></ion-grid
+    >
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content
+  [scrollEvents]="true"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollStart)="scrollStart(header)"
+  forceOverscroll="true"
+>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col *ngFor="let course of courses">
+        <ion-card
+          class="ion-padding"
+          (click)="openCourse(course.uid)"
+          color="soft"
+        >
+          <ion-card-title>
+            <ion-item
+              lines="none"
+              style="--background: rgba(255, 255, 255, 0);"
+            >
+              <ion-label
+                color="light"
+                style="font-size: 30px; font-weight: bold; padding-right: 20px;"
+                >{{ course.code }}</ion-label
+              >
+              <ion-icon
+                style="zoom: 1.6;"
+                name="people"
+                color="light"
+              ></ion-icon>
+              <ion-label
+                color="light"
+                style="margin: 0px; font-size: 30px; text-align: end; min-width: 10% !important;
+                max-width: 10% !important;"
+              >
+                {{ course.group }}
+              </ion-label>
+            </ion-item>
+          </ion-card-title>
+          <ion-card-content class="ion-no-padding">
+            <div class="divider" color="light"></div>
+            <ion-item
+              slot="end"
+              lines="none"
+              style="--background: rgba(255, 255, 255, 0)"
+            >
+              <ion-label color="light" style="text-align: left; margin-bottom: unset;">{{
+                course.name
+              }}</ion-label>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

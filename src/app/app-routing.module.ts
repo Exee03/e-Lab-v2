@@ -23,6 +23,10 @@ const routes: Routes = [
   { path: 'file-viewer-pdf', loadChildren: './modal-pages/file-viewer-pdf/file-viewer-pdf.module#FileViewerPdfPageModule' },
   { path: 'file-viewer', loadChildren: './modal-pages/file-viewer/file-viewer.module#FileViewerPageModule' },
   { path: 'edit-profile', loadChildren: './modal-pages/edit-profile/edit-profile.module#EditProfilePageModule' },
+  { path: 'course', loadChildren: './modal-pages/course/course.module#CoursePageModule' },
+  { path: 'group-modal', loadChildren: './modal-pages/group/group.module#GroupPageModule' },
+  { path: 'group', loadChildren: './sub-pages/group/group.module#GroupPageModule' },
+  { path: 'role', loadChildren: './modal-pages/role/role.module#RolePageModule' },
 
 ];
 

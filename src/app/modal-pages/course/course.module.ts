@@ -5,24 +5,22 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UserManagementPage } from './user-management.page';
-import { PipesModule } from 'src/app/pipes/pipes.module';
+import { CoursePage } from './course.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: UserManagementPage
+    component: CoursePage
   }
 ];
 
 @NgModule({
   imports: [
-    PipesModule,
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [UserManagementPage]
+  declarations: [CoursePage]
 })
-export class UserManagementPageModule {}
+export class CoursePageModule {}

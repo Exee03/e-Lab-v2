@@ -6,7 +6,7 @@ import { Course } from 'src/app/models/course';
 import { Faculty } from 'src/app/models/faculty';
 import { map, first } from 'rxjs/operators';
 import { Report, Header, Data } from 'src/app/models/report';
-import { User } from 'src/app/models/user';
+import { User, Roles } from 'src/app/models/user';
 import * as firebase from 'firebase/app';
 import { Evaluate, Files } from 'src/app/models/files';
 
@@ -416,6 +416,22 @@ export class DatabaseService {
     );
   }
 
+  addRubric(data: Files) {
+    return this.afStore.collection('rubric').add(data);
+  }
+
+  addManual(data: Files) {
+    return this.afStore.collection('manual').add(data);
+  }
+
+  addSchedule(data: Files) {
+    return this.afStore.collection('schedule').add(data);
+  }
+
+  addReference(data: Files) {
+    return this.afStore.collection('reference').add(data);
+  }
+
   updateRubric(data: Files) {
     return this.afStore.collection('rubric').doc(data.uid).update(data);
   }
@@ -432,19 +448,23 @@ export class DatabaseService {
     return this.afStore.collection('reference').doc(data.uid).update(data);
   }
 
-  addRubric(data: Files) {
-    return this.afStore.collection('rubric').add(data);
+  addCourse(data: Course) {
+    return this.afStore.collection('course').add(data);
   }
 
-  addManual(data: Files) {
-    return this.afStore.collection('manual').add(data);
+  addGroup(data: Group) {
+    return this.afStore.collection('group').add(data);
   }
 
-  addSchedule(data: Files) {
-    return this.afStore.collection('schedule').add(data);
+  updateCourse(course: Course) {
+    return this.afStore.collection('course').doc(course.uid).set(course, {merge: true});
   }
 
-  addReference(data: Files) {
-    return this.afStore.collection('reference').add(data);
+  updateGroup(group: Group) {
+    return this.afStore.collection('group').doc(group.uid).set(group, {merge: true});
+  }
+
+  updateRole(userUid: string, role: Roles) {
+    return this.afStore.collection('users').doc(userUid).update({roles: role});
   }
 }

@@ -12,7 +12,7 @@ export class FilterUserPipe implements PipeTransform {
     text = text.toLocaleLowerCase();
 
     return users.filter(user => {
-      return user.fullName.toLocaleLowerCase().includes(text) || user.id.toString().includes(text) ;
+      return user.fullName.toLocaleLowerCase().includes(text) || user.email.toString().includes(text) ;
     });
   }
 

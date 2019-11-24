@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ courseName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="editCourse()">
+        <ion-icon slot="start" name="create"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addGroup()">
+  <ion-fab-button>
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-content>
+  <div *ngIf="groups.length == 0">
+    <ion-grid>
+      <ion-row justify-content-center align-items-center style="height: 40vh">
+        <ion-label position="floating">No Group in this Course.</ion-label>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col *ngFor="let group of groups">
+        <ion-card color="soft" (click)="editGroup(group)">
+          <ion-card-title>
+            <ion-item
+              lines="none"
+              style="--background: rgba(255, 255, 255, 0);"
+            >
+              <ion-label
+                color="light"
+                style="font-size: 20px; font-weight: bold; padding-right: 20px;"
+                >{{ group.name }}</ion-label
+              >
+              <ion-icon name="person" style="zoom: 1;" color="light"></ion-icon>
+              <ion-label
+                color="light"
+                style="margin: 0px; font-size: 20px; text-align: end; min-width: 15% !important;
+                  max-width: 15% !important;"
+              >
+                {{ group.student }}
+              </ion-label>
+            </ion-item>
+          </ion-card-title>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
