@@ -1,9 +1,9 @@
 export interface Files {
-    course: string;
-    uid: string;
-    page: Page[];
-    firstPage: string;
-    lastUpdate: string;
+    course?: string;
+    uid?: string;
+    page?: Page[];
+    firstPage?: string;
+    lastUpdate?: string;
     selected?: boolean;
     items?: Items[];
 }
@@ -21,9 +21,9 @@ export interface Items {
 }
 
 export interface Evaluate {
-    uid: string;
+    uid?: string;
     rubric: string;
-    lastUpdate: string;
+    lastUpdate?: string;
     totalMark: number;
     fullMark: number;
     items: Items[];

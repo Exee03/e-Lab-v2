@@ -1,9 +1,98 @@
+<ion-header id="headerVerify" *ngIf="!hasVerified" class="hasVerified"
+  >Your email still not verified. Please check your email for email
+  verification.</ion-header
+>
+
+<ion-header #header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-grid class="ion-padding-start">
+      <ion-label>
+        <p style="font-size: 5vmin; padding-left: 30px;">{{ role }}</p>
+      </ion-label>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
 <ion-header>
-  <ion-toolbar>
-    <ion-title>student</ion-title>
+  <ion-toolbar color="primary">
+    <ion-grid
+      ><ion-label>
+        <h2 style="font-size: 10vmin; font-weight: bold; padding-left: 30px;">
+          Student Report
+        </h2>
+      </ion-label></ion-grid
+    >
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="selectCourse()">
+  <ion-fab-button>
+    <ion-icon name="bookmarks"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 
+<ion-content
+  [scrollEvents]="true"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollStart)="scrollStart(header)"
+  forceOverscroll="true"
+>
+<div *ngIf="isEmpty">
+    <ion-grid>
+      <ion-row justify-content-center align-items-center style="height: 40vh">
+        <ion-label position="floating">It looks like your student hasn't sent a report yet...</ion-label>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <div *ngIf="!isEmpty">
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>
+          Pending
+        </ion-label>
+      </ion-item-divider>
+      
+      <ng-container *ngFor="let report of reports">
+        <ion-item *ngIf="report.evaluate == undefined" (click)="openReport(report)">
+          <ion-icon
+            name="document"
+            color="soft"
+            class="ion-padding-horizontal"
+          ></ion-icon>
+          <ion-label>
+            <h3>{{ report.title }}</h3>
+            <p>{{ report.userName }}</p>
+            <p>{{ report.lastEdit }}</p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+    </ion-item-group>
+
+    <ion-item-group>
+        <ion-item-divider>
+          <ion-label>
+            Evaluated
+          </ion-label>
+        </ion-item-divider>
+  
+        <ng-container *ngFor="let report of reports">
+          <ion-item *ngIf="report.evaluate != undefined" (click)="openReport(report)">
+            <ion-icon
+              name="document"
+              color="soft"
+              class="ion-padding-horizontal"
+            ></ion-icon>
+            <ion-label>
+              <h3>{{ report.title }}</h3>
+              <p>{{ report.userName }}</p>
+              <p>{{ report.lastEdit }}</p>
+            </ion-label>
+          </ion-item>
+        </ng-container>
+      </ion-item-group>
+  </div>
 </ion-content>

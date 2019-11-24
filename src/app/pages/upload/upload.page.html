@@ -1,9 +1,69 @@
+<ion-header id="headerVerify" *ngIf="!hasVerified" class="hasVerified"
+  >Your email still not verified. Please check your email for email
+  verification.</ion-header
+>
+
+<ion-header #header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-grid class="ion-padding-start">
+      <ion-label>
+        <p style="font-size: 5vmin; padding-left: 30px;">{{ role }}</p>
+      </ion-label>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
 <ion-header>
-  <ion-toolbar>
-    <ion-title>upload</ion-title>
+  <ion-toolbar color="primary">
+    <ion-grid
+      ><ion-label>
+        <h2 style="font-size: 10vmin; font-weight: bold; padding-left: 30px;">
+          File Upload
+        </h2>
+      </ion-label></ion-grid
+    >
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content
+  [scrollEvents]="true"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollStart)="scrollStart(header)"
+  forceOverscroll="true"
+>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col *ngFor="let item of categories">
+          <ion-card
+          (click)="openCategory(item.title)"
+          color="soft"
+        >
+          <ion-card-header>
+            <ion-card-title>
+              <ion-item
+                lines="none"
+                style="--background: rgba(255, 255, 255, 0);"
+              >
+                <ion-label
+                  color="light"
+                  style="font-size: 30px; font-weight: bold; padding-right: 20px;"
+                  >{{ item.title }}</ion-label
+                >
+                <ion-icon
+                  [name]="item.icon"
+                  style="zoom: 1.5;"
+                  color="light"
+                ></ion-icon>
+              </ion-item>
+            </ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+

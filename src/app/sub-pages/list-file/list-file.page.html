@@ -35,7 +35,7 @@
   <div *ngIf="!isEmpty">
     <ion-grid
       no-padding
-      *ngIf="lastPage == '/menu/upload' && category == 'Rubric'"
+      *ngIf="category == 'Rubric'"
     >
       <ion-row>
         <ion-col>
@@ -102,8 +102,8 @@
           >
             <ion-label class="ion-padding"><h1>Rubric Form</h1></ion-label>
             <ion-item>
-              <ion-label *ngIf="selectedRubric != undefined"
-                >PDF file from {{ selectedRubric.lastUpdate }}</ion-label
+              <ion-label *ngIf="selectedFile != undefined"
+                >PDF file from {{ selectedFile.lastUpdate }}</ion-label
               >
             </ion-item>
 
@@ -161,7 +161,7 @@
     </ion-grid>
     <ion-grid
       no-padding
-      *ngIf="lastPage == '/menu/upload' && category == 'Manuals'"
+      *ngIf="category == 'Manuals'"
     >
       <ion-row *ngIf="!isEmpty" >
         <ion-col *ngFor="let file of files">

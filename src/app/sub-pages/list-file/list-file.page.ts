@@ -5,7 +5,8 @@ import { Files, Items } from 'src/app/models/files';
 import { CommonService } from 'src/app/services/common/common.service';
 import { FileViewerPage } from 'src/app/modal-pages/file-viewer/file-viewer.page';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { first } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-list-file',
@@ -13,33 +14,61 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./list-file.page.scss'],
 })
 export class ListFilePage implements OnInit {
-  lastPage = '';
   category = '';
   files = [];
   isEmpty = true;
-  selectedRubric: Files;
+  selectedFile: Files;
   items: Items[] = [{
     id: 1,
     text: ''
   }];
   isStudent = true;
+  unsubscribeListFile$ = new Subject<void>();
 
   constructor(
     private modalController: ModalController,
     private commonService: CommonService,
     private authService: AuthenticationService
   ) {
-    this.files = this.commonService.files;
+    this.category = this.commonService.uploadCategory;
+    this.commonService.files.pipe(takeUntil(this.unsubscribeListFile$)).subscribe(files => {
+      this.getFiles(files);
+    });
     this.authService.user$.pipe(first()).subscribe(user => {
       this.isStudent = (authService.isAdmin(user) || authService.isLecturer(user)) ? false : true;
     });
   }
 
+  private getFiles(files: Files[]) {
+    this.files = [];
+    files.forEach((file: Files) => {
+      if (file.course === this.commonService.selectedGroupDetail.courseUid) {
+        this.isEmpty = false;
+        this.files.push(file);
+        if (file.selected !== false) {
+          this.selectedFile = file;
+          if (file.items !== undefined) {
+            this.items = file.items;
+          }
+        }
+      }
+    });
+  }
+
   ngOnInit() {
+    if (this.files.length !== 0) {
+      this.isEmpty = false;
+    }
+  }
+
+  // tslint:disable-next-line: use-lifecycle-interface
+  ngOnDestroy() {
+    this.unsubscribeListFile$.next();
+    this.unsubscribeListFile$.complete();
   }
 
   checkEvent(file) {
-    this.selectedRubric = file;
+    this.selectedFile = file;
     if (file.items !== undefined) {
       this.items = file.items;
     } else {
@@ -48,12 +77,13 @@ export class ListFilePage implements OnInit {
         text: ''
       }];
     }
-    this.files.forEach(element => {
-      if (element.uid === file.uid) {
-        this.commonService.updateFile(element);
+    // tslint:disable-next-line: no-shadowed-variable
+    this.files.forEach(file => {
+      if (file.uid === file.uid) {
+        this.commonService.updateFile(file);
       } else {
-        element.selected = false;
-        this.commonService.updateFile(element);
+        file.selected = false;
+        this.commonService.updateFile(file);
       }
     });
     this.commonService.showToast('Done updating...');
@@ -101,13 +131,13 @@ export class ListFilePage implements OnInit {
   }
 
   updateRubric() {
-    if (this.selectedRubric) {
+    if (this.selectedFile) {
       this.items.forEach(item => {
         item.text = this.commonService.capitalize(item.text);
       });
-      this.selectedRubric.items = this.items;
-      this.commonService.updateFile(this.selectedRubric);
-      this.commonService.showToast('Updated!!!');
+      this.selectedFile.items = this.items;
+      this.commonService.updateFile(this.selectedFile);
+      this.commonService.showToast('Successfully update.');
     } else {
       this.commonService.showAlert('No file', '', 'Please select file, then submit it again.');
     }

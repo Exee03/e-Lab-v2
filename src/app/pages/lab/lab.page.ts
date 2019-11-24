@@ -45,6 +45,7 @@ export class LabPage implements OnInit {
     private commonService: CommonService,
     private authService: AuthenticationService
     ) {
+      this.hasVerified = this.authService.isEmailVerified.value;
       this.authService.user$.pipe(first()).subscribe(user => {
         this.user = user;
         this.role = this.authService.getRole(user);
@@ -119,25 +120,21 @@ export class LabPage implements OnInit {
   }
 
   private getFile(category: string) {
-    console.log(category);
-    
     switch (category) {
       case 'Rubric': {
-        this.commonService.rubrics.pipe(takeUntil(this.unsubscribeFiles$)).subscribe(files => this.commonService.files = files);
+        this.commonService.rubrics.pipe(takeUntil(this.unsubscribeFiles$)).subscribe(files => this.commonService.files.next(files));
         break;
       }
       case 'Manuals': {
-        this.commonService.manuals.pipe(takeUntil(this.unsubscribeFiles$)).subscribe(files => this.commonService.files = files);
+        this.commonService.manuals.pipe(takeUntil(this.unsubscribeFiles$)).subscribe(files => this.commonService.files.next(files));
         break;
       }
       case 'Schedule': {
-        this.commonService.schedules.pipe(takeUntil(this.unsubscribeFiles$)).subscribe(files => this.commonService.files = files);
+        this.commonService.schedules.pipe(takeUntil(this.unsubscribeFiles$)).subscribe(files => this.commonService.files.next(files));
         break;
       }
       case 'Reference': {
-        console.log(this.commonService.references.value);
-        
-        this.commonService.references.pipe(takeUntil(this.unsubscribeFiles$)).subscribe(files => this.commonService.files = files);
+        this.commonService.references.pipe(takeUntil(this.unsubscribeFiles$)).subscribe(files => this.commonService.files.next(files));
         break;
       }
       default: {

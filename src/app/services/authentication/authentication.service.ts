@@ -63,9 +63,11 @@ export class AuthenticationService {
       }, error => this.commonService.showAlertError('Error!', '', error.message));
     } else if (this.isLecturer(user)) {
       // tslint:disable-next-line: max-line-length
-      this.databaseService.getAllReportBySubmit().pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe(reports => {
-        // tslint:disable-next-line: no-unused-expression
-        (reports) ? this.lecturerService.reports = reports : [];
+      this.databaseService.getAllReportBySubmitWithUser().pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe(data => {
+        this.lecturerService.reports.next(data[0]);
+        this.lecturerService.allEvaluate.next(data[1]);
+        this.lecturerService.allStudentData.next(data[2]);
+        this.lecturerService.allRubric.next(data[3]);
         this.showToast(false, user);
       }, error => this.commonService.showAlertError('Error!', '', error.message));
     } else {
@@ -96,8 +98,6 @@ export class AuthenticationService {
   async register(email, password) {
     this.isRegister = true;
     const user = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-    console.log('User UID: ', user.user.uid);
-    console.log(user.additionalUserInfo.providerId);
     let text = '';
     const username = user.user.email.split('@', 1);
     text = `Hello & Welcome ${username}`;
@@ -113,8 +113,6 @@ export class AuthenticationService {
 
   async google() {
     const user = await this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
-    console.log('User UID: ', user.user.uid);
-    console.log(user.additionalUserInfo.providerId);
     let text = '';
     const username = user.user.displayName;
     text = `Welcome back, ${username}`;
@@ -413,7 +411,7 @@ export class AuthenticationService {
   }
 
   logout() {
-    return this.afAuth.auth.signOut().then(res => {
+    return this.afAuth.auth.signOut().finally(() => {
       this.databaseService.unsubscribe$.next();
       this.databaseService.unsubscribe$.complete();
       this.storage.remove('auth-token');

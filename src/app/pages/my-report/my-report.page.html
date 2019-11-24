@@ -50,7 +50,7 @@
         </ion-label>
       </ion-item-divider>
 
-      <ion-list *ngFor="let report of reports">
+      <ng-container *ngFor="let report of reports">
         <ion-item
           *ngIf="report.evaluate == undefined"
           (click)="openReport(report)"
@@ -65,7 +65,7 @@
             <p>{{ report.lastEdit }}</p>
           </ion-label>
         </ion-item>
-      </ion-list>
+      </ng-container>
     </ion-item-group>
 
     <ion-item-group>
@@ -75,7 +75,7 @@
         </ion-label>
       </ion-item-divider>
 
-      <ion-list *ngFor="let report of reports">
+      <ng-container *ngFor="let report of reports">
         <ion-item
           *ngIf="report.evaluate != undefined"
           (click)="openReport(report)"
@@ -90,7 +90,7 @@
             <p>{{ report.lastEdit }}</p>
           </ion-label>
         </ion-item>
-      </ion-list>
+      </ng-container>
     </ion-item-group>
   </div>
 </ion-content>

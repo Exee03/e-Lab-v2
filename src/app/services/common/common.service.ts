@@ -25,7 +25,7 @@ export class CommonService {
   references = new BehaviorSubject<Files[]>([]);
   uploadCategory: string;
   selectedGroupDetail: GroupDetail;
-  files: Files[] = [];
+  files = new BehaviorSubject<Files[]>([]);
 
   constructor(
     private toastController: ToastController,

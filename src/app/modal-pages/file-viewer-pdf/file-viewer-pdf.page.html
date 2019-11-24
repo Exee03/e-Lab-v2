@@ -1,9 +1,20 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>file-viewer-pdf</ion-title>
+  <ion-toolbar color="dark">
+    <ion-title style="padding-left: 15px;">File Preview</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeFileViewerPdf()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="uploadToStorage()">
+    <ion-icon name="cloud-upload"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 
+<ion-content>
+  <div id="pdf-viewer"></div>
 </ion-content>

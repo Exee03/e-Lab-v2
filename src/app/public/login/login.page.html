@@ -18,6 +18,7 @@
                 <ion-input
                   color="light"
                   clearInput
+                  (keyup.enter)="login()"
                   type="email"
                   [(ngModel)]="email"
                   autocomplete="off"

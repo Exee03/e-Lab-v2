@@ -1,9 +1,67 @@
+<ion-fab horizontal="end" vertical="bottom" (click)="doneEvaluate()">
+  <ion-fab-button>
+    <ion-icon name="checkmark"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
 <ion-header>
-  <ion-toolbar>
-    <ion-title>evaluate-report</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-toggle menu="evaluation">
+        <ion-button>
+          <ion-icon name="checkmark-circle-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+    </ion-buttons>
+    <ion-title>Evaluate Report</ion-title>
   </ion-toolbar>
 </ion-header>
+<ion-content class="A4">
+  <!-- Set "A5", "A4" or "A3" for class name -->
+  <!-- Set also "landscape" if you need -->
+  <!-- Each sheet element should have the class "sheet" -->
+  <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
 
-<ion-content>
-
+  <!-- Write HTML just like a web page -->
+  <article class="sheet padding-10mm">
+    <div id="report">
+      <img class="displayed" src="../assets/images/uitm-logo-full.svg" />
+      <div class="frontPage">
+        <br />
+        <br />
+        <br />
+        <h1>{{ user.faculty }}</h1>
+        <br />
+        <h1>UNIVERSITI TEKNOLOGI MARA</h1>
+        <br />
+        <hr width="95%" size="5" noshade />
+        <br />
+        <h1>{{ groupDetail.courseName }}</h1>
+        <h1>({{ groupDetail.courseCode }})</h1>
+        <br />
+        <br />
+        <h1>{{ report.title }}</h1>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="table">
+          <p align="left">BY:</p>
+          <br />
+          <table CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BORDER="2">
+            <tr>
+              <td BGCOLOR="#CCCCCC">NAME</td>
+            </tr>
+            <tr>
+              <td>{{ user.fullName }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <p id="headers"></p>
+    </div>
+  </article>
 </ion-content>

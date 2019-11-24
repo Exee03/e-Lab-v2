@@ -35,3 +35,10 @@ export interface Data {
     type?: string;
     data?: string;
 }
+
+export interface ReportData {
+    report?: Report;
+    headers?: Header[];
+    subHeaders?: Header[];
+    data?: Data[];
+}

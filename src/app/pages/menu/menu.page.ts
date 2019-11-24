@@ -51,6 +51,12 @@ export class MenuPage implements OnInit {
       this.router.events.subscribe((event: RouterEvent) => {
         this.selectedPath = event.url;
       });
+      this.lecturerService.items.pipe(takeUntil(databaseService.unsubscribe$)).subscribe(items => {
+        this.items = items;
+      });
+      this.lecturerService.totalMarkPercentage.pipe(takeUntil(databaseService.unsubscribe$)).subscribe(percent => {
+        this.totalMarkPercentage = percent;
+      });
    }
 
   ngOnInit() {
@@ -67,20 +73,20 @@ export class MenuPage implements OnInit {
   }
 
   mark(newItem: any, scale: any) {
-    // this.lecturerService.totalMark = 0;
-    // let numItem = 0;
-    // this.items.forEach(item => {
-    //   numItem++;
-    //   if (item.id === newItem.id) {
-    //     item.mark = scale;
-    //     this.lecturerService.totalMark = this.lecturerService.totalMark + (scale * item.weight);
-    //   } else {
-    //     this.lecturerService.totalMark =
-    //       this.lecturerService.totalMark + (item.mark * item.weight);
-    //   }
-    // });
-    // this.totalMarkPercentage = (this.lecturerService.totalMark / this.lecturerService.fullMark) * 100;
-    // this.lecturerService.totalMarkPercentage.next(this.totalMarkPercentage);
+    this.lecturerService.totalMark = 0;
+    let numItem = 0;
+    this.items.forEach(item => {
+      numItem++;
+      if (item.id === newItem.id) {
+        item.mark = scale;
+        this.lecturerService.totalMark = this.lecturerService.totalMark + (scale * item.weight);
+      } else {
+        this.lecturerService.totalMark =
+          this.lecturerService.totalMark + (item.mark * item.weight);
+      }
+    });
+    this.totalMarkPercentage = (this.lecturerService.totalMark / this.lecturerService.fullMark) * 100;
+    this.lecturerService.totalMarkPercentage.next(Math.round(this.totalMarkPercentage));
   }
 
   async viewRubric() {
@@ -88,7 +94,7 @@ export class MenuPage implements OnInit {
       component: FileViewerPage,
       cssClass: 'wideModal',
       componentProps: {
-        // course: this.lecturerService.selectedGroup.courseUid
+        pages: this.lecturerService.rubric.page
       }
     });
     return await modal.present();

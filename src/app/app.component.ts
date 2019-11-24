@@ -30,7 +30,7 @@ export class AppComponent {
         console.log('Auth changed: ', state);
         if (state) {
           this.router.navigate(['menu']);
-          this.router.dispose();
+          // this.router.dispose();
         } else {
           this.router.navigate(['login']);
         }

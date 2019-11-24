@@ -50,6 +50,9 @@ export class SelectCoursePage implements OnInit {
     if (this.from === 'select-file') {
       this.getFile(selectCourse);
       await this.modalController.dismiss();
+    } else if (this.from === 'student-report') {
+      this.lecturerService.selectedGroupDetail.next(this.commonService.groupDetails.value.find(gd => gd.courseUid === selectCourse.uid));
+      await this.modalController.dismiss();
     } else {
       this.courses.forEach(course => {
         if (course.uid === selectCourse.uid) {
@@ -64,6 +67,7 @@ export class SelectCoursePage implements OnInit {
   }
 
   async selectGroup(course: Course, group: Group) {
+    course.showGroup = false;
     await this.modalController.dismiss();
     if (this.from === 'writing') {
       const modal = await this.modalController.create({
@@ -87,15 +91,15 @@ export class SelectCoursePage implements OnInit {
     } else {
       const category = this.commonService.uploadCategory;
       if (category !== 'Reference') {
-        if (this.commonService.files.length !== 0) {
-          const selectedFile = this.commonService.files.find(file => file.course === course.uid);
+        if (this.commonService.files.value.length !== 0) {
+          const selectedFile = this.commonService.files.value.find(file => file.course === course.uid);
           if (selectedFile === undefined) {
-            this.commonService.showToast(`No ${category} file is selected by lecturer !!!`);
+            this.commonService.showToast(`No ${category} file is selected by lecturer.`);
           } else {
             this.viewFile(selectedFile);
           }
         } else {
-          this.commonService.showToast(`No ${category} file is selected by lecturer !!!`);
+          this.commonService.showToast(`No ${category} file is selected by lecturer.`);
         }
       } else {
         this.selectGroupDetail(course);

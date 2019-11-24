@@ -83,12 +83,39 @@ export class DatabaseService {
     return combineLatest(this.getAllGroup(), this.getAllCourse());
   }
 
+  getAllEvaluation() {
+    return this.afStore
+      .collection('evaluate')
+      .snapshotChanges()
+      .pipe(
+        map(changes => {
+          return changes.map(a => {
+            const data = a.payload.doc.data() as Evaluate;
+            data.uid = a.payload.doc.id;
+            return data;
+          });
+        })
+      );
+  }
+
   getEvaluation(evaluateUid: string) {
     return this.afStore
       .collection('evaluate')
       .doc<Evaluate>(evaluateUid)
       .valueChanges()
       .pipe(first());
+  }
+
+  addEvaluation(evaluate: Evaluate) {
+    return this.afStore.collection('evaluate').add(evaluate);
+  }
+
+  updateEvaluation(evaluateUid: string, evaluate: Evaluate) {
+    return this.afStore.collection('evaluate').doc(evaluateUid).update(evaluate);
+  }
+
+  updateEvaluationToReport(evaluateUid: string, reportUid: string) {
+    return this.afStore.collection('report').doc(reportUid).set({evaluate: evaluateUid}, {merge: true});
   }
 
   getAllReportBySubmit() {
@@ -103,6 +130,16 @@ export class DatabaseService {
           });
         })
       );
+  }
+
+  getAllReportBySubmitWithUser() {
+    // tslint:disable-next-line: deprecation
+    return combineLatest(
+      this.getAllReportBySubmit(),
+      this.getAllEvaluation(),
+      this.getAllUser(),
+      this.getAllRubric()
+    );
   }
 
   getReportByUser(userUid: string) {
@@ -393,5 +430,21 @@ export class DatabaseService {
 
   updateReference(data: Files) {
     return this.afStore.collection('reference').doc(data.uid).update(data);
+  }
+
+  addRubric(data: Files) {
+    return this.afStore.collection('rubric').add(data);
+  }
+
+  addManual(data: Files) {
+    return this.afStore.collection('manual').add(data);
+  }
+
+  addSchedule(data: Files) {
+    return this.afStore.collection('schedule').add(data);
+  }
+
+  addReference(data: Files) {
+    return this.afStore.collection('reference').add(data);
   }
 }

@@ -4,8 +4,6 @@ import { GroupDetail } from 'src/app/models/group';
 import { User } from 'src/app/models/user';
 import { Report, Header, Data, HeaderData } from 'src/app/models/report';
 import { StudentService } from 'src/app/services/student/student.service';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import * as html2pdf from 'html2pdf.js';
 @Component({
@@ -28,8 +26,6 @@ export class ReportViewerPage implements OnInit {
     public actionSheetController: ActionSheetController,
     private navParams: NavParams,
     private studentService: StudentService,
-    private lecturerService: LecturerService,
-    private authService: AuthenticationService,
     private commonService: CommonService
   ) {
     this.report = this.navParams.get('report');
