@@ -1,0 +1,50 @@
+<ion-header>
+    <ion-toolbar color="dark">
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content class="ion-padding" align="center" color="light">
+    <ion-toolbar color="light">
+      <div align="center">
+        <br />
+        <br />
+        <h1>Hi !</h1>
+        <br />
+        <h3>One more thing...</h3>
+        <br />
+        <ion-label
+          >We need additional information from you for future use.</ion-label
+        >
+        <br />
+        <br />
+        <br />
+      </div>
+    </ion-toolbar>
+    <ion-item>
+      <ion-label position="floating">Full Name</ion-label>
+      <ion-input
+        class="item-input"
+        clearInput
+        type="text"
+        [(ngModel)]="fullName"
+        autocomplete="off"
+        autocorrect="off"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Faculty</ion-label>
+      <ion-select [(ngModel)]="faculty" (ionChange)="optionsFn(faculty);">
+        <ion-select-option
+          *ngFor="let faculty of faculties"
+          [value]="faculty.name"
+          >{{ faculty.name }}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+  </ion-content>
+  <ion-footer color="light">
+    <ion-button color="primary" expand="full" (click)="update()">
+      SUBMIT
+    </ion-button>
+  </ion-footer>
+  

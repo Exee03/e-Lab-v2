@@ -30,7 +30,7 @@ export class MyReportPage implements OnInit {
     ) {
       this.hasVerified = this.authService.isEmailVerified.value;
       this.studentService.reports.pipe(takeUntil(this.studentService.unsubscribeReport$)).subscribe(reports => {
-        if (reports) {
+        if (reports.length !== 0) {
           this.reports = reports;
           this.isEmpty = false;
         } else {

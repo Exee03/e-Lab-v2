@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeForgot()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-toolbar color="light">
+  <div align="center">
+    <br />
+    <br />
+    <h1>Hi !</h1>
+    <br />
+    <h3>Forgot Your Password?</h3>
+    <br />
+    <ion-label
+      >Enter your email address below and we'll get you back on
+      track.</ion-label
+    >
+    <br />
+    <br />
+    <br />
+  </div>
+</ion-toolbar>
+
+<ion-content class="ion-padding" align="center" color="light">
+  <ion-item>
+    <ion-label position="floating">Email</ion-label>
+    <ion-input
+      clearInput
+      type="email"
+      [(ngModel)]="email"
+      autocomplete="off"
+      autocorrect="off"
+    ></ion-input>
+  </ion-item>
+</ion-content>
+<ion-footer color="light">
+  <ion-button color="primary" expand="full" (click)="reset()">
+    RESET
+  </ion-button>
+</ion-footer>

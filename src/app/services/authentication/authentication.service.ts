@@ -13,6 +13,9 @@ import { StudentService } from '../student/student.service';
 import { LecturerService } from '../lecturer/lecturer.service';
 import { AdminService } from '../admin/admin.service';
 import { Router } from '@angular/router';
+import { AnalyticsService } from '../analytics/analytics.service';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +27,7 @@ export class AuthenticationService {
   isEmailVerified = new BehaviorSubject(true);
   enterApp = false;
   isRegister = false;
+  requestInfo = new BehaviorSubject<firebase.User>(null);
 
   constructor(
     private afStore: AngularFirestore,
@@ -36,9 +40,11 @@ export class AuthenticationService {
     private studentService: StudentService,
     private lecturerService: LecturerService,
     private adminService: AdminService,
+    private analyticService: AnalyticsService
   ) {
     this.plt.ready().then(async () => {
       this.checkToken();
+      this.commonService.getAllFaculty();
       await commonService.getGroupDetails();
       this.getUser();
       this.getUserData();
@@ -49,6 +55,7 @@ export class AuthenticationService {
     this.user$.pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe((user: User) => {
       if (user) {
         this.isEmailVerified.next(this.afAuth.auth.currentUser.emailVerified);
+        this.analyticService.initFirebaseAnalytic(user.uid);
         this.preparingData(user);
       }
     });
@@ -95,41 +102,100 @@ export class AuthenticationService {
     return this.user$;
   }
 
-  async register(email, password) {
-    this.isRegister = true;
-    const user = await this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-    let text = '';
-    const username = user.user.email.split('@', 1);
-    text = `Hello & Welcome ${username}`;
-    await this.commonService.showToast(text);
-    return this.storage.set('auth-token', user.user.uid).then(res => {
-      this.authenticationState.next(true);
-    });
+  async register(email, password, displayName, fullName, faculty) {
+    this.commonService.showToast('Signing up...');
+    try {
+      this.router.navigate(['/login']).then(async _ => {
+        const credential = await this.afAuth.auth.createUserWithEmailAndPassword(
+          email,
+          password
+        );
+        const user: User = {
+          uid: credential.user.uid,
+          email: credential.user.email,
+          provider: credential.additionalUserInfo.providerId,
+          displayName,
+          // phone,
+          // id,
+          fullName,
+          faculty,
+          report: 0,
+          photoURL:
+            // tslint:disable-next-line: max-line-length
+            'https://firebasestorage.googleapis.com/v0/b/e-lab-b4105.appspot.com/o/e-lab%2Fdefault-user.png?alt=media&token=bbd6dc4a-b9ec-478f-b83a-add40e046d2d'
+        };
+        return this.saveUserData(user).then(async res => {
+          this.isRegister = true;
+          this.afAuth.auth.currentUser.sendEmailVerification();
+          await this.commonService.showAlert(
+            'Verification email sent!',
+            `Hi & Welcome ${displayName}`,
+            // tslint:disable-next-line: max-line-length
+            `This action requires email verification. Please check your inbox and follow the instructions. Email sent to:\n${credential.user.email}`
+          );
+          // this.analyticsService.logEvent('register-done');
+        });
+      });
+    } catch (error) {
+      await this.commonService.showAlert('Oppsss...', '', error.message);
+    }
   }
 
   sentEmailVerification() {
     return this.afAuth.auth.currentUser.sendEmailVerification();
   }
 
+  async resetPassword(email) {
+    try {
+      await this.afAuth.auth.sendPasswordResetEmail(email);
+      await this.commonService.showToast(
+        'Forgot password email sent. Please check your email for reset the password'
+      );
+    } catch (error) {
+      await this.commonService.showAlert('Oppsss...', '', error.message);
+    }
+  }
+
   async google() {
-    const user = await this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
-    let text = '';
-    const username = user.user.displayName;
-    text = `Welcome back, ${username}`;
-    this.commonService.showToast(text);
-    return this.storage.set('auth-token', user.user.uid).then(res => {
-      this.authenticationState.next(true);
+    const provider = new firebase.auth.GoogleAuthProvider();
+    this.afAuth.auth.signInWithPopup(provider).then(credential => {
+      return this.oAuthLogin(credential);
+    }).catch(async error => {
+      // this.commonService.loading(true, 'AuthService-oAuthLogin');
+      await this.commonService.showAlert('Oppsss...', '', error.message);
+    });
+  }
+
+  private oAuthLogin(credential: auth.UserCredential) {
+    const usersRef = this.afStore
+      .collection('users')
+      .doc(credential.user.uid);
+    usersRef.get().subscribe(async docSnapshot => {
+      this.analyticService.logEvent('login-google', true);
+      this.analyticService.logEvent('session', false);
+      if (docSnapshot.exists === true) {
+        this.enteringApp(credential.user.uid);
+        this.updateLastSeen(credential);
+      } else {
+        // this.commonService.loading(true, 'AuthService-oAuthLogin');
+        // tslint:disable-next-line: no-unused-expression
+        // this.router.navigate(['/additional-info']);
+        this.requestInfo.next(credential.user);
+        this.updateLastSeen(credential);
+      }
     });
   }
 
   async login(email, password) {
-    this.commonService.showToast('Sign in...');
+    this.commonService.showToast('Signing in...');
     // this.commonService.loading(false, 'AuthService-login');
     await this.afAuth.auth
       .signInWithEmailAndPassword(email, password)
       .then(credential => {
-        this.updateUser(credential);
+        this.analyticService.logEvent('login-password', true);
+        this.analyticService.logEvent('session', false);
         this.enteringApp(credential.user.uid);
+        this.updateLastSeen(credential);
       })
       .catch(async error => {
         console.log(error);
@@ -139,24 +205,8 @@ export class AuthenticationService {
       });
   }
 
-  updateUser(credential: firebase.auth.UserCredential) {
-    // tslint:disable-next-line: max-line-length
-    let photoURL = 'https://firebasestorage.googleapis.com/v0/b/e-lab-b4105.appspot.com/o/e-lab%2Fdefault-user.png?alt=media&token=bbd6dc4a-b9ec-478f-b83a-add40e046d2d';
-    if (credential.user.photoURL !== undefined) {
-      photoURL = credential.user.photoURL;
-    }
-    // this.user = {
-    //   provider: credential.additionalUserInfo.providerId,
-    //   uid: credential.user.uid,
-    //   phone: credential.user.phoneNumber,
-    //   email: credential.user.email,
-    //   displayName: credential.user.displayName,
-    //   photoURL
-    // };
-  }
-
-  updateLastSeen(user: User) {
-    const userRef = this.afStore.collection('users').doc(user.uid);
+  updateLastSeen(credential: firebase.auth.UserCredential) {
+    const userRef = this.afStore.collection('users').doc(credential.user.uid);
     return userRef.update({ lastSeen: this.commonService.getTime() });
   }
 
@@ -174,7 +224,6 @@ export class AuthenticationService {
   async showToast(firstTime: boolean, user: User) {
     let text = '';
     if (!this.enterApp && !this.isRegister) {
-      this.updateLastSeen(user);
       // this.analyticsService.setUserId(this.user, this.getRole());
       // this.analyticsService.logEvent('login-done', {method: this.user.provider});
       if (firstTime === false) {
@@ -411,10 +460,13 @@ export class AuthenticationService {
   }
 
   logout() {
+    this.analyticService.logEvent('logout', true);
+    this.analyticService.logEvent('session', true);
     return this.afAuth.auth.signOut().finally(() => {
       this.databaseService.unsubscribe$.next();
       this.databaseService.unsubscribe$.complete();
       this.storage.remove('auth-token');
+      this.analyticService.dispose();
       this.enterApp = false;
       this.authenticationState.next(false);
     });

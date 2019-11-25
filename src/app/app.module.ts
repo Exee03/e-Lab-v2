@@ -15,10 +15,12 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
 import * as firebase from 'firebase/app';
-import 'firebase/analytics';
 
 firebase.initializeApp(environment.firebase);
-// firebase.analytics();
+import 'firebase/analytics';
+import 'firebase/database';
+import 'firebase/auth';
+import 'firebase/firestore';
 
 import { TextEditorPageModule } from './modal-pages/text-editor/text-editor.module';
 import { ImageViewerPageModule } from './modal-pages/image-viewer/image-viewer.module';
@@ -31,6 +33,9 @@ import { EditProfilePageModule } from './modal-pages/edit-profile/edit-profile.m
 import { CoursePageModule } from './modal-pages/course/course.module';
 import { GroupPageModule } from './modal-pages/group/group.module';
 import { RolePageModule } from './modal-pages/role/role.module';
+import { ForgotPageModule } from './modal-pages/forgot/forgot.module';
+import { RegisterPageModule } from './modal-pages/register/register.module';
+import { AdditionalInfoPageModule } from './modal-pages/additional-info/additional-info.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -54,7 +59,10 @@ import { RolePageModule } from './modal-pages/role/role.module';
     EditProfilePageModule,
     CoursePageModule,
     GroupPageModule,
-    RolePageModule
+    RolePageModule,
+    ForgotPageModule,
+    RegisterPageModule,
+    AdditionalInfoPageModule
   ],
   providers: [
     StatusBar,

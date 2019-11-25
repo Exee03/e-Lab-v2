@@ -5,7 +5,6 @@ import { AuthGuardService } from './services/auth-guard.service';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', loadChildren: './public/login/login.module#LoginPageModule' },
-  { path: 'register', loadChildren: './public/register/register.module#RegisterPageModule' },
   {
     path: 'menu',
     canActivate: [AuthGuardService],
@@ -27,7 +26,9 @@ const routes: Routes = [
   { path: 'group-modal', loadChildren: './modal-pages/group/group.module#GroupPageModule' },
   { path: 'group', loadChildren: './sub-pages/group/group.module#GroupPageModule' },
   { path: 'role', loadChildren: './modal-pages/role/role.module#RolePageModule' },
-
+  { path: 'forgot', loadChildren: './modal-pages/forgot/forgot.module#ForgotPageModule' },
+  { path: 'register', loadChildren: './modal-pages/register/register.module#RegisterPageModule' },
+  { path: 'additional-info', loadChildren: './modal-pages/additional-info/additional-info.module#AdditionalInfoPageModule' },
 ];
 
 @NgModule({

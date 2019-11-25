@@ -14,7 +14,7 @@ export interface User {
     id?: string;
     fullName?: string;
     faculty?: string;
-    phone: string;
+    phone?: string;
     report?: number;
     photoURL?: string;
     course?: Array<string>;

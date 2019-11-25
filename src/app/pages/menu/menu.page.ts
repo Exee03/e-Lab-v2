@@ -105,7 +105,7 @@ export class MenuPage implements OnInit {
   }
 
   logout() {
-    // this.analyticService.logEvent('signOut-start');
+    this.analyticService.logEvent('logout', false);
     this.authService.logout();
   }
 

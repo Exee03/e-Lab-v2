@@ -8,6 +8,7 @@ import { map, first } from 'rxjs/operators';
 import { Report, Header, Data } from 'src/app/models/report';
 import { User, Roles } from 'src/app/models/user';
 import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 import { Evaluate, Files } from 'src/app/models/files';
 
 @Injectable({

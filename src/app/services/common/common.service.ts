@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ToastController, AlertController, LoadingController, Platform } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
 import { DatabaseService } from '../database/database.service';
 import { takeUntil } from 'rxjs/operators';
@@ -32,7 +31,6 @@ export class CommonService {
     private alertController: AlertController,
     private loadingController: LoadingController,
     private platform: Platform,
-    private storage: Storage,
     private databaseService: DatabaseService
   ) {}
 

@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="end">
+      <ion-button (click)="closeRegister()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" align="center" color="light">
+  <ion-toolbar color="light">
+    <div align="center">
+      <br />
+      <br />
+      <h1>Hi !</h1>
+      <br />
+      <h3>Sign up to e-Lab</h3>
+      <br />
+      <ion-label
+        >Please fill out this form, and we'll send you a welcome email so you
+        can verify your email address and sign in.</ion-label
+      >
+      <br />
+      <br />
+      <br />
+    </div>
+  </ion-toolbar>
+  <ion-item>
+    <ion-label position="floating">Full Name</ion-label>
+    <ion-input
+      class="item-input"
+      clearInput
+      type="text"
+      [(ngModel)]="fullName"
+      autocomplete="off"
+      autocorrect="off"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Short Name</ion-label>
+    <ion-input
+      class="item-input"
+      clearInput
+      type="text"
+      [(ngModel)]="displayName"
+      autocomplete="off"
+      autocorrect="off"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Faculty</ion-label>
+    <ion-select [(ngModel)]="faculty" (ionChange)="optionsFn(faculty);">
+      <ion-select-option
+        *ngFor="let faculty of faculties"
+        [value]="faculty.name"
+        >{{ faculty.name }}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Email</ion-label>
+    <ion-input
+      clearInput
+      type="email"
+      [(ngModel)]="email"
+      autocomplete="off"
+      autocorrect="off"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Password</ion-label>
+    <ion-input
+      class="item-input"
+      clearInput
+      type="password"
+      [(ngModel)]="password"
+      autocomplete="off"
+      autocorrect="off"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Confirm Password</ion-label>
+    <ion-input
+      class="item-input"
+      clearInput
+      type="password"
+      [(ngModel)]="confirmPassword"
+      autocomplete="off"
+      autocorrect="off"
+    ></ion-input>
+  </ion-item>
+</ion-content>
+<ion-footer color="light">
+  <ion-button color="primary" expand="full" (click)="register()">
+    SIGN UP
+  </ion-button>
+</ion-footer>
