@@ -28,7 +28,7 @@ export class LoginPage implements OnInit {
     private analyticService: AnalyticsService
   ) {
     this.authService.requestInfo.pipe(takeUntil(this.unsubscribeLogin$)).subscribe(async user => {
-      if (user) {
+      if (user !== null) {
         const modal = await this.modalController.create({
           component: AdditionalInfoPage,
           backdropDismiss: false,

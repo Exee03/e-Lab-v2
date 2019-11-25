@@ -56,6 +56,7 @@ export class AdditionalInfoPage implements OnInit {
       photoURL: this.user.photoURL
     };
     this.authService.saveUserData(userData).finally(() => {
+      this.authService.requestInfo.next(null);
       this.closeAdditionalInfo();
       this.authService.enteringApp(this.user.uid);
     });
