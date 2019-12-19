@@ -49,6 +49,18 @@
     ></ion-input>
   </ion-item>
   <ion-item>
+    <ion-label position="floating">Matrix Number</ion-label>
+    <ion-input
+      class="item-input"
+      clearInput
+      type="text"
+      [(ngModel)]="id"
+      (keydown)="checkNumber($event)"
+      autocomplete="off"
+      autocorrect="off"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
     <ion-label>Faculty</ion-label>
     <ion-select [(ngModel)]="faculty" (ionChange)="optionsFn(faculty);">
       <ion-select-option
@@ -57,6 +69,17 @@
         >{{ faculty.name }}</ion-select-option
       >
     </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Phone Number</ion-label>
+    <ion-input
+      class="item-input"
+      clearInput
+      type="tel"
+      [(ngModel)]="phone"
+      autocomplete="off"
+      autocorrect="off"
+    ></ion-input>
   </ion-item>
   <ion-item>
     <ion-label position="floating">Email</ion-label>

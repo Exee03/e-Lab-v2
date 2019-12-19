@@ -43,15 +43,45 @@ export class EditProfilePage implements OnInit, OnDestroy {
     this.user.faculty = faculty;
   }
 
+  checkNumber(event: KeyboardEvent) {
+    const pattern = /[0-9\+\-\ ]/;
+    const allowedKeys = [
+      'Backspace', 'ArrowLeft', 'ArrowRight', 'Escape', 'Tab'
+  ];
+    const inputChar = event.key;
+    // tslint:disable-next-line: deprecation
+    if (event.keyCode !== 8 && !pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+    if (this.user.id !== undefined && !allowedKeys.includes(inputChar) ) {
+      if (this.user.id.length > 9) {
+        event.preventDefault();
+      }
+    }
+  }
+
   update() {
-    this.analyticService.logEvent('edit-profile', false);
-    this.commonService.showToast('Updating...');
-    this.user.fullName = this.commonService.capitalize(this.user.fullName);
-    this.user.displayName = this.commonService.capitalize(this.user.displayName);
-    this.authService.saveUserData(this.user).then(() => this.closeEditProfile()).finally(() => {
-      this.commonService.showToast('Your new information has been updated.');
-      this.analyticService.logEvent('edit-profile', true);
-    });
+    if (this.user.id !== undefined) {
+      if (this.user.id.length < 10) {
+        this.commonService.showToast('Please fill in the full Matrix number');
+      } else {
+        // tslint:disable-next-line: max-line-length
+        if (this.user.fullName !== '' && this.user.displayName !== '' && this.user.faculty !== '' && this.user.phone !== '' && this.user.email !== '') {
+          this.analyticService.logEvent('edit-profile', false);
+          this.commonService.showToast('Updating...');
+          this.user.fullName = this.commonService.capitalize(this.user.fullName);
+          this.user.displayName = this.commonService.capitalize(this.user.displayName);
+          this.authService.saveUserData(this.user).then(() => this.closeEditProfile()).finally(() => {
+            this.commonService.showToast('Your new information has been updated.');
+            this.analyticService.logEvent('edit-profile', true);
+          });
+        } else {
+          this.commonService.showToast('Please fill in the blank field');
+        }
+      }
+    } else {
+      this.commonService.showToast('Please fill in the blank field');
+    }
   }
 
   async closeEditProfile() {

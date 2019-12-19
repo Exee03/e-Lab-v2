@@ -59,6 +59,25 @@
           </tr>
           <tr>
             <td>
+              <ion-icon name="card" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label position="floating">Matrix Number</ion-label>
+                <ion-input
+                  class="item-input"
+                  clearInput
+                  type="text"
+                  (keydown)="checkNumber($event)"
+                  [(ngModel)]="user.id"
+                  autocomplete="off"
+                  autocorrect="off"
+                ></ion-input>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
               <ion-icon name="contacts" size="large" color="soft"></ion-icon>
             </td>
             <td>

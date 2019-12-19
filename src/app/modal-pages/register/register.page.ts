@@ -18,6 +18,8 @@ export class RegisterPage implements OnInit {
   confirmPassword = '';
   displayName = '';
   fullName = '';
+  phone = '';
+  id = '';
   faculty = '';
   faculties: Faculty[] = [];
   unsubscribeRegister$ = new Subject<void>();
@@ -46,9 +48,26 @@ export class RegisterPage implements OnInit {
     this.faculty = faculty;
   }
 
+  checkNumber(event: KeyboardEvent) {
+    const pattern = /[0-9\+\-\ ]/;
+    const allowedKeys = [
+      'Backspace', 'ArrowLeft', 'ArrowRight', 'Escape', 'Tab'
+  ];
+    const inputChar = event.key;
+    // tslint:disable-next-line: deprecation
+    if (event.keyCode !== 8 && !pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+    if (this.id !== undefined && !allowedKeys.includes(inputChar) ) {
+      if (this.id.length > 9) {
+        event.preventDefault();
+      }
+    }
+  }
+
   async register() {
     this.analyticService.logEvent('register', false);
-    const { email, password, confirmPassword, faculty } = this;
+    const { email, password, confirmPassword, faculty, phone, id } = this;
     let { displayName, fullName } = this;
     displayName = this.commonService.capitalize(displayName);
     fullName = this.commonService.capitalize(fullName);
@@ -56,7 +75,7 @@ export class RegisterPage implements OnInit {
       if (confirmPassword === password) {
         try {
           this.authService.isRegister = true;
-          this.authService.register(email, password, displayName, fullName, faculty).finally(() => this.closeRegister());
+          this.authService.register(email, password, displayName, fullName, faculty, phone, id).finally(() => this.closeRegister());
         } catch (error) {
           this.commonService.showToast(`Error!\n${error.message}\nPlease try again.`);
           console.dir(error);

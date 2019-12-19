@@ -102,7 +102,7 @@ export class AuthenticationService {
     return this.user$;
   }
 
-  async register(email, password, displayName, fullName, faculty) {
+  async register(email, password, displayName, fullName, faculty, phone, id) {
     this.commonService.showToast('Signing up...');
     try {
       this.router.navigate(['/login']).then(async _ => {
@@ -115,8 +115,8 @@ export class AuthenticationService {
           email: credential.user.email,
           provider: credential.additionalUserInfo.providerId,
           displayName,
-          // phone,
-          // id,
+          phone,
+          id,
           fullName,
           faculty,
           report: 0,
