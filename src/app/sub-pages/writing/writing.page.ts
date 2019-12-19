@@ -40,7 +40,7 @@ export class WritingPage implements OnInit {
   reportUid: string;
   reportTitle = 'New Report';
   // userGroup = '';
-  // isNative = false;
+  isNative = false;
   // unsubscribeReport$ = new Subject<void>();
   // firstFetch = true;
   doneHeader = false;
@@ -59,6 +59,8 @@ export class WritingPage implements OnInit {
       this.getToken();
       this.studentService.isGettingData.pipe(takeUntil(studentService.unsubscribeReport$)).subscribe(getData => {
         console.log('auto refresh');
+        console.log(this.reportUid);
+        
         if (!getData && this.reportUid) {
           this.refresh();
         }
