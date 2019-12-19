@@ -6,6 +6,7 @@ import { AdminService } from 'src/app/services/admin/admin.service';
 import { Subject } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { RolePage } from 'src/app/modal-pages/role/role.page';
+import { ViewProfilePage } from 'src/app/modal-pages/view-profile/view-profile.page';
 
 @Component({
   selector: 'app-user-management',
@@ -105,6 +106,16 @@ export class UserManagementPage implements OnInit {
   filterUser(event) {
     const text: string = event.target.value;
     this.textFilter = text;
+  }
+
+  async viewProfile(user: User) {
+    const modal = await this.modalController.create({
+      component: ViewProfilePage,
+      componentProps: {
+        user
+      }
+    });
+    return await modal.present();
   }
 
 }

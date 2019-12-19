@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title style="padding-left: 15px;">View Profile</ion-title>
+    <ion-buttons slot="end" color="primary">
+      <ion-button (click)="closeViewProfile()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row
+      justify-content-center
+      align-items-center
+      style="height: 100%; flex-direction: column"
+    >
+      <ion-avatar style="zoom: 2;">
+        <img src="{{user.photoURL}}" />
+      </ion-avatar>
+      <ion-col col-auto>
+        <table align="center">
+          <tr>
+            <td>
+              <ion-icon name="person" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label>
+                  <p>Short Name</p>
+                  <h2>{{ user.displayName }}</h2>
+                </ion-label>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="person" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label>
+                  <p>Full Name</p>
+                  <h2>{{ user.fullName }}</h2>
+                </ion-label>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="card" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label>
+                  <p>Matrix Number</p>
+                  <h2>{{ user.id }}</h2>
+                </ion-label>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="contacts" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label>
+                  <p>Faculty</p>
+                  <h2>{{ user.faculty }}</h2>
+                </ion-label>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="mail" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label>
+                  <p>Email</p>
+                  <h2>{{ user.email }}</h2>
+                </ion-label>
+              </ion-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ion-icon name="call" size="large" color="soft"></ion-icon>
+            </td>
+            <td>
+              <ion-item>
+                <ion-label>
+                  <p>Phone Number</p>
+                  <h2>{{ user.phone }}</h2>
+                </ion-label>
+              </ion-item>
+            </td>
+          </tr>
+        </table>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -46,7 +46,7 @@
   forceOverscroll="true"
 >
   <ion-list class="ion-padding">
-    <ion-item *ngFor="let user of users | filterUser: textFilter">
+    <ion-item *ngFor="let user of users | filterUser: textFilter" (click)="viewProfile(user)">
     <ion-label>
       <h2>{{ user.fullName }}</h2>
       <p>{{ user.email }}</p>

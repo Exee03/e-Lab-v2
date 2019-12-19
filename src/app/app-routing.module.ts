@@ -28,7 +28,8 @@ const routes: Routes = [
   { path: 'role', loadChildren: './modal-pages/role/role.module#RolePageModule' },
   { path: 'forgot', loadChildren: './modal-pages/forgot/forgot.module#ForgotPageModule' },
   { path: 'register', loadChildren: './modal-pages/register/register.module#RegisterPageModule' },
-  { path: 'additional-info', loadChildren: './modal-pages/additional-info/additional-info.module#AdditionalInfoPageModule' },
+  { path: 'additional-info', loadChildren: './modal-pages/additional-info/additional-info.module#AdditionalInfoPageModule' },  { path: 'view-profile', loadChildren: './modal-pages/view-profile/view-profile.module#ViewProfilePageModule' },
+
 ];
 
 @NgModule({
