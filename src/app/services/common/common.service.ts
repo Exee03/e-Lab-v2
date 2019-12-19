@@ -138,7 +138,14 @@ export class CommonService {
     newCourse.forEach(course => {
       const group = groups.filter(g => g.course === course.uid);
       group.forEach(g => g.selected = false);
-      course.groups = group;
+      const groupByName = group.slice(0);
+      // tslint:disable-next-line: only-arrow-functions
+      groupByName.sort(function(a, b) {
+          const x = a.name.toLowerCase();
+          const y = b.name.toLowerCase();
+          return x < y ? -1 : x > y ? 1 : 0;
+      });
+      course.groups = groupByName;
       course.showGroup = false;
     });
     this.courseWithGroup.next(newCourse);
