@@ -6,6 +6,7 @@ import { Report, Header, Data, HeaderData } from 'src/app/models/report';
 import { StudentService } from 'src/app/services/student/student.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import * as html2pdf from 'html2pdf.js';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 @Component({
   selector: 'app-report-viewer',
   templateUrl: './report-viewer.page.html',
@@ -26,7 +27,8 @@ export class ReportViewerPage implements OnInit {
     public actionSheetController: ActionSheetController,
     private navParams: NavParams,
     private studentService: StudentService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private analyticService: AnalyticsService
   ) {
     this.report = this.navParams.get('report');
     this.header = this.navParams.get('header');
@@ -135,7 +137,7 @@ export class ReportViewerPage implements OnInit {
       indexHeader += 1;
       indexSubHeader = 0.1;
     });
-    // this.analyticsService.logEvent('previewWriteReport-done', {method: this.report.uid});
+    this.analyticService.logEvent('preview-report', true);
     return this.document;
   }
 
@@ -172,18 +174,15 @@ export class ReportViewerPage implements OnInit {
   }
 
   async presentActionSheet() {
-    // this.analyticsService.logEvent('submitReport-start');
     const actionSheet = await this.actionSheetController.create({
       header: 'Report',
       buttons: [{
         text: 'Submit',
         icon: 'cloud-upload',
         handler: () => {
+          this.analyticService.logEvent('submit-report', false);
           this.commonService.showToast('Your report is being submitted...');
-          this.studentService.submitReport(this.report.uid);
-          // tslint:disable-next-line: max-line-length
-          this.commonService.showAlert('Successful', '', 'Your report is successfully upload. Now you can see your report status in the My Report.');
-          this.closeTextEditor();
+          this.studentService.submitReport(this.report.uid).finally(() => this.closeTextEditor());
         }
       }, {
         text: 'Download PDF',

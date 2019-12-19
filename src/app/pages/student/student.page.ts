@@ -8,6 +8,7 @@ import { SelectCoursePage } from 'src/app/modal-pages/select-course/select-cours
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { User } from 'src/app/models/user';
 import { Router } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-student',
@@ -30,11 +31,12 @@ export class StudentPage implements OnInit {
     private router: Router,
     private modalController: ModalController,
     private lecturerService: LecturerService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private analyticService: AnalyticsService
     ) {
       this.hasVerified = this.authService.isEmailVerified.value;
       this.lecturerService.reports.pipe(takeUntil(this.unsubscribeListReport$)).subscribe(report => {
-        this.getReport();
+        if (report) { this.getReport(); }
       });
       this.authService.user$.pipe(takeUntil(this.unsubscribeListReport$)).subscribe(user => {
         this.user.next(user);
@@ -47,6 +49,7 @@ export class StudentPage implements OnInit {
         this.lecturerService.getReportWithUserData().then(() => {
           this.reports = this.lecturerService.reportsWithUserData;
           this.isEmpty = (this.reports.length !== 0) ? false : true;
+          this.analyticService.logEvent('view-student-report', true);
         });
       }
     });
@@ -71,8 +74,9 @@ export class StudentPage implements OnInit {
   }
 
   openReport(report: Report) {
+    this.analyticService.logEvent('open-student-report', false);
     this.lecturerService.getStudentData(report.uid);
-    this.router.navigate(['menu/evaluate-report']);
+    this.router.navigate(['menu/evaluate-report']).finally(() => this.analyticService.logEvent('open-student-report', true));
   }
 
   // tslint:disable-next-line: use-lifecycle-interface

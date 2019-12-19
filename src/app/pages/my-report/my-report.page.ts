@@ -5,6 +5,7 @@ import { StudentService } from 'src/app/services/student/student.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { Report } from 'src/app/models/report';
 import { takeUntil } from 'rxjs/operators';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-my-report',
@@ -26,7 +27,8 @@ export class MyReportPage implements OnInit {
     private renderer: Renderer2,
     private authService: AuthenticationService,
     private studentService: StudentService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private analyticService: AnalyticsService
     ) {
       this.hasVerified = this.authService.isEmailVerified.value;
       this.studentService.reports.pipe(takeUntil(this.studentService.unsubscribeReport$)).subscribe(reports => {
@@ -94,8 +96,8 @@ export class MyReportPage implements OnInit {
 
   async openReport(report: Report) {
     if (report.evaluate !== undefined) {
+      this.analyticService.logEvent('view-mark', false);
       this.commonService.showToast('Getting report...');
-      // this.commonService.loading(false, 'listMyReport-openReport');
       this.studentService.getEvaluation(report.uid);
     } else {
       this.commonService.showAlert(

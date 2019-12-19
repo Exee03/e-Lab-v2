@@ -11,6 +11,7 @@ import { TextEditorPage } from 'src/app/modal-pages/text-editor/text-editor.page
 import { takeUntil, first } from 'rxjs/operators';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-writing',
@@ -49,9 +50,10 @@ export class WritingPage implements OnInit {
     private renderer: Renderer2,
     private commonService: CommonService,
     private modalController: ModalController,
+    private storage: Storage,
     private studentService: StudentService,
     private authService: AuthenticationService,
-    private storage: Storage,
+    private analyticService: AnalyticsService
     ) {
       this.authService.user$.pipe(first()).subscribe(user => this.user = user);
       this.getToken();
@@ -108,7 +110,6 @@ export class WritingPage implements OnInit {
   addHeader() {
     console.log('addHeader');
     if (!this.addingHeader) {
-      // this.analyticsService.logEvent('addHeader-start');
       this.addingHeader = true;
     } else {
       this.addingHeader = false;
@@ -118,8 +119,6 @@ export class WritingPage implements OnInit {
   addSubHeader() {
     console.log('addSubHeader');
     if (!this.addingSubHeader) {
-      // this.analyticsService.userId.next(this.userUid);
-      // this.analyticsService.logEvent('addSubHeader-start');
       this.addingSubHeader = true;
     } else {
       this.addingSubHeader = false;
@@ -128,7 +127,7 @@ export class WritingPage implements OnInit {
 
   saveHeader() {
     console.log('saveHeader');
-    // this.commonService.loading(false, 'writing-saveHeader');
+    this.analyticService.logEvent('add-header', false);
     const { nameHeader } = this;
     let headerLength = 0;
     if (this.header !== undefined) {
@@ -141,9 +140,8 @@ export class WritingPage implements OnInit {
 
   saveSubHeader(i) {
     console.log('saveSubHeader');
-    // this.analyticsService.userId.next(this.userUid);
+    this.analyticService.logEvent('add-subHeader', false);
     const index = i - 1;
-    // this.commonService.loading(false, 'writing-saveSubHeader');
     const { nameSubHeader } = this;
     const headerId = this.header[index].uid;
     this.studentService.addSubHeader(
@@ -223,7 +221,6 @@ export class WritingPage implements OnInit {
           header.isEdit = false;
         } else if (header.isEdit === false) {
           header.isEdit = true;
-          // this.analyticsService.logEvent('editHeader-start', {method: i});
         }
       } else if (header.id !== i) {
         header.isEdit = false;
@@ -239,7 +236,6 @@ export class WritingPage implements OnInit {
           subHeader.isEdit = false;
         } else if (subHeader.isEdit === false) {
           subHeader.isEdit = true;
-          // this.analyticsService.logEvent('editSubHeader-start', {method: i});
         }
       } else if (subHeader.uid !== i) {
         subHeader.isEdit = false;
@@ -249,19 +245,18 @@ export class WritingPage implements OnInit {
 
   updateHeaderName(i) {
     console.log('updateHeaderName');
-    // this.commonService.loading(false, 'writing-updateHeaderName');
+    this.analyticService.logEvent('edit-header', false);
     this.header.forEach(header => {
       if (header.uid === i) {
         this.studentService.editHeader(this.reportUid, header.name, header.uid);
         header.isEdit = false;
       }
     });
-    // this.fetchHeader();
   }
 
   updateSubHeaderName(i) {
     console.log('updateSubHeaderName');
-    // this.commonService.loading(false, 'writing-updateSubHeaderName');
+    this.analyticService.logEvent('edit-subHeader', false);
     this.subHeader.forEach(element => {
       if (element.uid === i) {
         this.studentService.editSubHeader(
@@ -272,34 +267,29 @@ export class WritingPage implements OnInit {
         element.isEdit = false;
       }
     });
-    // this.fetchHeader();
   }
 
   cancelUpdateHeaderName(i) {
     console.log('cancelUpdateHeaderName');
-    // this.commonService.loading(false, 'writing-cancelUpdateSubHeaderName');
     this.header.forEach(header => {
       if (header.uid === i) {
         header.isEdit = false;
       }
     });
-    // this.fetchHeader();
   }
 
   cancelUpdateSubHeaderName(i) {
     console.log('cancelUpdateSubHeaderName');
-    // this.commonService.loading(false, 'writing-cancelUpdateSubHeaderName');
     this.subHeader.forEach(subHeader => {
       if (subHeader.uid === i) {
         subHeader.isEdit = false;
       }
     });
-    // this.fetchHeader();
   }
 
   deleteHeader(headerId) {
     console.log('deleteHeader');
-    // this.analyticsService.logEvent('deleteHeader-start', {method: headerId});
+    this.analyticService.logEvent('delete-header', false);
     this.header.forEach(header => {
       if (header.id === headerId) {
         this.studentService.deleteHeader(this.reportUid, this.header, header.uid);
@@ -309,7 +299,7 @@ export class WritingPage implements OnInit {
 
   deleteSubHeader(header: Header, subHeader: Header) {
     console.log('deleteSubHeader');
-    // this.analyticsService.logEvent('deleteSubHeader-start', {method: subHeader.uid});
+    this.analyticService.logEvent('delete-subHeader', false);
     this.studentService.deleteSubHeader(
       this.reportUid,
       header.uid,
@@ -321,7 +311,7 @@ export class WritingPage implements OnInit {
 
   deleteHeaderData(headerId, dataUid) {
     console.log('deleteHeaderData');
-    // this.analyticsService.logEvent('deleteHeaderData-start', {method: dataUid});
+    this.analyticService.logEvent('delete-data-header', false);
     this.header.forEach((element: Header) => {
       if (element.id === headerId) {
         this.studentService.deleteHeaderData(
@@ -336,7 +326,7 @@ export class WritingPage implements OnInit {
 
   deleteSubHeaderData(subUid, dataUid) {
     console.log('deleteSubHeaderData');
-    // this.analyticsService.logEvent('deleteSubHeaderData-start', {method: dataUid});
+    this.analyticService.logEvent('delete-data-subHeader', false);
     this.subHeader.forEach((element: Header) => {
       if (element.uid === subUid) {
         this.studentService.deleteSubHeaderData(
@@ -351,8 +341,6 @@ export class WritingPage implements OnInit {
 
   openTextEditor(headerUid, subHeaderUid = '', data: Data = {}) {
     console.log('openTextEditor');
-    // this.analyticsService.userId.next(this.userUid);
-    // this.analyticsService.logEvent('addText-start', {method: `${headerUid}${subHeaderUid}`});
     this.header.forEach(async (eHeader: Header) => {
       if (eHeader.uid === headerUid) {
         if (subHeaderUid !== '') {
@@ -388,7 +376,6 @@ export class WritingPage implements OnInit {
 
   async addImage(event: any, headerUid, subHeaderUid = '', data: Data = {}) {
     console.log('addImage');
-    // this.analyticsService.logEvent('addImage-start', {method: `web-${headerUid}${subHeaderUid}`});
     this.commonService.showToast('Uploading...');
     this.commonService.loading(false, 'writing-addImage');
     this.uploadImage(event.target.files[0], headerUid, subHeaderUid, data);
@@ -401,6 +388,7 @@ export class WritingPage implements OnInit {
     data: Data = {}
   ) {
     console.log('uploadImage');
+    this.analyticService.logEvent('add-image', false);
     this.header.forEach(async eHeader => {
       if (eHeader.uid === headerUid) {
         if (subHeaderUid !== '') {
@@ -436,23 +424,6 @@ export class WritingPage implements OnInit {
     });
   }
 
-  reorderHeader(event) {
-    console.log('reorderHeader');
-    if (event.target.id === 'idHeader') {
-      const newHeader = this.header as Header[];
-      const itemToMove = newHeader.splice(event.detail.from, 1)[0];
-      newHeader.splice(event.detail.to, 0, itemToMove);
-      let index = 0;
-      // tslint:disable-next-line: no-shadowed-variable
-      newHeader.forEach(element => {
-        index += 1;
-        element.id = index;
-      });
-      this.studentService.updateOrderHeader(this.reportUid, newHeader);
-    }
-    event.detail.complete();
-  }
-
   async updateImage(headerUid, subHeaderUid = '', data: Data = {}) {
     console.log('updateImage');
     const modal = await this.modalController.create({
@@ -470,7 +441,7 @@ export class WritingPage implements OnInit {
   async preview() {
     console.log('preview');
     if (this.report) {
-      // this.analyticsService.logEvent('previewWriteReport-start', {method: this.report.uid});
+      this.analyticService.logEvent('preview-report', false);
       const modal = await this.modalController.create({
         component: ReportViewerPage,
         // cssClass: 'wideModal',
@@ -493,8 +464,27 @@ export class WritingPage implements OnInit {
     item.close();
   }
 
+  reorderHeader(event) {
+    console.log('reorderHeader');
+    this.analyticService.logEvent('reorder-header', false);
+    if (event.target.id === 'idHeader') {
+      const newHeader = this.header as Header[];
+      const itemToMove = newHeader.splice(event.detail.from, 1)[0];
+      newHeader.splice(event.detail.to, 0, itemToMove);
+      let index = 0;
+      // tslint:disable-next-line: no-shadowed-variable
+      newHeader.forEach(element => {
+        index += 1;
+        element.id = index;
+      });
+      this.studentService.updateOrderHeader(this.reportUid, newHeader);
+    }
+    event.detail.complete();
+  }
+
   reorderHeaderData(event, headerUid: string) {
     console.log('reorderHeaderData');
+    this.analyticService.logEvent('reorder-data-header', false);
     if (event.target.id === 'idHeaderData') {
       const newHeaderData = this.headerData as HeaderData[];
       const itemToMove = newHeaderData.splice(event.detail.from, 1)[0];
@@ -521,6 +511,7 @@ export class WritingPage implements OnInit {
 
   reorderSubHeaderData(event, subHeaderUid: string) {
     console.log('reorderSubHeaderData');
+    this.analyticService.logEvent('reorder-data-subHeader', false);
     if (event.target.id === 'idSubHeaderData') {
       const newSubHeaderData = this.subHeaderData as HeaderData[];
       const itemToMove = newSubHeaderData.splice(event.detail.from, 1)[0];
@@ -576,13 +567,4 @@ export class WritingPage implements OnInit {
   scrollStart(title) {
     this.title = title.el;
   }
-
-  // backPage() {
-  //   console.log('backPage');
-  //   this.storage.remove('report-token');
-  //   // this.storage.remove('course-token');
-  //   // this.firstFetch = true;
-  //   // this.router.navigate(['list-report']);
-  // }
-
 }

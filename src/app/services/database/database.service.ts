@@ -15,7 +15,7 @@ import { Evaluate, Files } from 'src/app/models/files';
   providedIn: 'root'
 })
 export class DatabaseService {
-  unsubscribe$ = new Subject<void>();
+  unsubscribe$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private afStore: AngularFirestore) {}
 

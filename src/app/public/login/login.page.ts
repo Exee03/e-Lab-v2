@@ -15,10 +15,8 @@ import { AdditionalInfoPage } from 'src/app/modal-pages/additional-info/addition
   styleUrls: ['./login.page.scss']
 })
 export class LoginPage implements OnInit {
-  // tslint:disable-next-line: ban-types
-  email: String = '';
-  // tslint:disable-next-line: ban-types
-  password: String = '';
+  email = '';
+  password = '';
   unsubscribeLogin$ = new Subject<void>();
 
   constructor(
@@ -48,7 +46,6 @@ export class LoginPage implements OnInit {
   }
 
   google() {
-    this.analyticService.logEvent('login-google', false);
     this.authService.google().catch(error => this.commonService.showAlertError('Error!', '', error));
   }
 

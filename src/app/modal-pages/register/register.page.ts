@@ -5,6 +5,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-register',
@@ -25,6 +26,7 @@ export class RegisterPage implements OnInit {
     private modalController: ModalController,
     private authService: AuthenticationService,
     private commonService: CommonService,
+    private analyticService: AnalyticsService
     ) {
       this.commonService.faculties.pipe(takeUntil(this.unsubscribeRegister$)).subscribe(faculties => {
         this.faculties = faculties;
@@ -45,6 +47,7 @@ export class RegisterPage implements OnInit {
   }
 
   async register() {
+    this.analyticService.logEvent('register', false);
     const { email, password, confirmPassword, faculty } = this;
     let { displayName, fullName } = this;
     displayName = this.commonService.capitalize(displayName);

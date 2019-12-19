@@ -9,6 +9,7 @@ import { StudentService } from 'src/app/services/student/student.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { first } from 'rxjs/operators';
 import { User } from 'src/app/models/user';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-my-report-detail',
@@ -27,7 +28,8 @@ export class MyReportDetailPage implements OnInit {
     private modalController: ModalController,
     private commonService: CommonService,
     private authService: AuthenticationService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private analyticService: AnalyticsService
   ) {
     this.report = this.studentService.selectedReport;
     this.evaluation = this.studentService.evaluation;
@@ -68,7 +70,7 @@ export class MyReportDetailPage implements OnInit {
   }
 
   async openReport() {
-    // this.analyticsService.logEvent('previewWriteReport-start', {method: this.report.uid});
+    this.analyticService.logEvent('preview-report', false);
     const modal = await this.modalController.create({
       component: ReportViewerPage,
       componentProps: {

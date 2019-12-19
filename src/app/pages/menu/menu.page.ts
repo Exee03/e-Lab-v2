@@ -90,6 +90,7 @@ export class MenuPage implements OnInit {
   }
 
   async viewRubric() {
+    this.analyticService.logEvent('open-rubric', false);
     const modal = await this.modalController.create({
       component: FileViewerPage,
       cssClass: 'wideModal',
@@ -97,11 +98,11 @@ export class MenuPage implements OnInit {
         pages: this.lecturerService.rubric.page
       }
     });
-    return await modal.present();
+    return await modal.present().finally(() => this.analyticService.logEvent('open-rubric', true));
   }
 
   openSettings() {
-    // this.analyticService.logEvent('viewProfile-start');
+    this.analyticService.logEvent('view-profile', false);
   }
 
   logout() {

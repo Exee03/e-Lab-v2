@@ -5,6 +5,7 @@ import { StudentService } from 'src/app/services/student/student.service';
 import { Course } from 'src/app/models/course';
 import { Group } from 'src/app/models/group';
 import { Router } from '@angular/router';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-create-report',
@@ -21,10 +22,11 @@ export class CreateReportPage implements OnInit {
 
   constructor(
     private modalController: ModalController,
+    private navParams: NavParams,
+    private router: Router,
     private commonService: CommonService,
     private studentService: StudentService,
-    private navParams: NavParams,
-    private router: Router
+    private analyticService: AnalyticsService
     ) {
     }
 
@@ -37,6 +39,7 @@ export class CreateReportPage implements OnInit {
   }
 
   createReport() {
+    this.analyticService.logEvent('create-report', false);
     this.commonService.showToast('Creating new report...');
     this.title = (this.title === '') ? 'Untitled - ' + this.commonService.getTime() : this.commonService.capitalize(this.title);
     // tslint:disable-next-line: max-line-length

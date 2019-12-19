@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { first } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
 import { EditProfilePage } from 'src/app/modal-pages/edit-profile/edit-profile.page';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-settings',
@@ -29,6 +30,7 @@ export class SettingsPage implements OnInit {
     private renderer: Renderer2,
     public authService: AuthenticationService,
     private commonService: CommonService,
+    private analyticService: AnalyticsService
     ) {
       this.hasVerified = this.authService.isEmailVerified.value;
       this.authService.user$.pipe(first()).subscribe(user => {
@@ -37,10 +39,12 @@ export class SettingsPage implements OnInit {
         this.photoURL = user.photoURL;
         this.email = user.email;
         this.fullName = user.fullName;
+        this.analyticService.logEvent('view-profile', true);
       });
     }
 
   ngOnInit() {
+    this.commonService.getAllFaculty();
   }
 
   async logScrolling($event) {
@@ -99,7 +103,6 @@ export class SettingsPage implements OnInit {
   }
 
   async editProfile() {
-    await this.commonService.getAllFaculty();
     const modal = await this.modalController.create({
       component: EditProfilePage,
       componentProps: {

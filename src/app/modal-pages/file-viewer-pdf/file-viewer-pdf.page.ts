@@ -5,6 +5,7 @@ import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 pdfjsLib.GlobalWorkerOptions.workerSrc = './assets/pdf.worker.min.js';
 
 
@@ -25,7 +26,8 @@ export class FileViewerPdfPage implements OnInit {
     private navParams: NavParams,
     private storage: AngularFireStorage,
     private commonService: CommonService,
-    private lecturerService: LecturerService
+    private lecturerService: LecturerService,
+    private analyticService: AnalyticsService
   ) {
     this.pdfUrl = this.navParams.get('url');
   }
@@ -59,11 +61,13 @@ export class FileViewerPdfPage implements OnInit {
       canvas.width = viewport.width;
       page.render({canvasContext: canvas.getContext('2d'), viewport}).then(res => {
         this.pages.push({pageNumber, canvas});
+        this.analyticService.logEvent('view-file-pdf', true);
       });
     });
   }
 
   uploadToStorage() {
+    this.analyticService.logEvent('upload-file', false);
     let totalPage = 0;
     this.commonService.showToast('Uploading...');
     this.lecturerService.addFile().then(docUid => {
@@ -83,7 +87,7 @@ export class FileViewerPdfPage implements OnInit {
               });
               totalPage++;
               if (totalPage === this.pages.length) {
-                this.commonService.showToast('successfully upload.');
+                this.commonService.showToast('Successfully upload.');
                 const arraySort = [];
                 // tslint:disable-next-line: prefer-for-of
                 for (let index = 1; index <= page.length; index++) {

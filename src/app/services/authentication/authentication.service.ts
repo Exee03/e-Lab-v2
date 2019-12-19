@@ -133,6 +133,7 @@ export class AuthenticationService {
             // tslint:disable-next-line: max-line-length
             `This action requires email verification. Please check your inbox and follow the instructions. Email sent to:\n${credential.user.email}`
           );
+          this.analyticService.logEvent('register', true);
           // this.analyticsService.logEvent('register-done');
         });
       });
@@ -151,6 +152,7 @@ export class AuthenticationService {
       await this.commonService.showToast(
         'Forgot password email sent. Please check your email for reset the password'
       );
+      this.analyticService.logEvent('forgot', true);
     } catch (error) {
       await this.commonService.showAlert('Oppsss...', '', error.message);
     }
@@ -159,6 +161,7 @@ export class AuthenticationService {
   async google() {
     const provider = new firebase.auth.GoogleAuthProvider();
     this.afAuth.auth.signInWithPopup(provider).then(credential => {
+      this.analyticService.logEvent('login-google', false);
       return this.oAuthLogin(credential);
     }).catch(async error => {
       // this.commonService.loading(true, 'AuthService-oAuthLogin');
@@ -463,7 +466,7 @@ export class AuthenticationService {
     this.analyticService.logEvent('logout', true);
     this.analyticService.logEvent('session', true);
     return this.afAuth.auth.signOut().finally(() => {
-      this.databaseService.unsubscribe$.next();
+      this.databaseService.unsubscribe$.next(true);
       this.databaseService.unsubscribe$.complete();
       this.storage.remove('auth-token');
       this.analyticService.dispose();

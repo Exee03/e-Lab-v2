@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Renderer2 } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { takeUntil } from 'rxjs/operators';
+import { DatabaseService } from 'src/app/services/database/database.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +20,7 @@ export class DashboardPage implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
+    private databaseService: DatabaseService,
     private renderer: Renderer2,
     ) {
       this.setupMenu();
@@ -27,9 +30,8 @@ export class DashboardPage implements OnInit {
   }
 
   setupMenu() {
-    this.authService.user$.subscribe(user => {
+    this.authService.user$.pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe(user => {
       if (user) {
-        // this.analyticsService.userId.next(users.uid);
         this.role = this.authService.getRole(user);
         this.hasVerified = this.authService.isEmailVerified.value;
         this.cards = this.authService.getCards(user);

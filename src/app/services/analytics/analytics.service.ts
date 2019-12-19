@@ -48,7 +48,7 @@ export class AnalyticsService {
           if (dataEvent !== '') {
             e.dataEvent = dataEvent;
           }
-          firebase.database().ref().push(e);
+          // firebase.database().ref().push(e);
           firebase.analytics().logEvent(e.event, e);
         }
       });

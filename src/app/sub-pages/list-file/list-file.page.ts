@@ -7,6 +7,7 @@ import { FileViewerPage } from 'src/app/modal-pages/file-viewer/file-viewer.page
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-list-file',
@@ -28,7 +29,8 @@ export class ListFilePage implements OnInit {
   constructor(
     private modalController: ModalController,
     private commonService: CommonService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private analyticService: AnalyticsService
   ) {
     this.category = this.commonService.uploadCategory;
     this.commonService.files.pipe(takeUntil(this.unsubscribeListFile$)).subscribe(files => {
@@ -68,6 +70,7 @@ export class ListFilePage implements OnInit {
   }
 
   checkEvent(file) {
+    this.analyticService.logEvent('select-file', false);
     this.selectedFile = file;
     if (file.items !== undefined) {
       this.items = file.items;
@@ -87,9 +90,11 @@ export class ListFilePage implements OnInit {
       }
     });
     this.commonService.showToast('Done updating...');
+    this.analyticService.logEvent('select-file', true);
   }
 
   async viewFile(selectedFile) {
+    this.analyticService.logEvent('view-file', false);
     const modal = await this.modalController.create({
       component: FileViewerPage,
       cssClass: 'wideModal',
@@ -97,8 +102,7 @@ export class ListFilePage implements OnInit {
         pages: selectedFile.page
       }
     });
-    // this.analyticsService.logEvent('labContent-start', {method: 'references'});
-    return await modal.present();
+    return await modal.present().finally(() => this.analyticService.logEvent('view-file', true));
   }
 
   onFileSelected(event: any) {
@@ -131,6 +135,7 @@ export class ListFilePage implements OnInit {
   }
 
   updateRubric() {
+    this.analyticService.logEvent('update-rubric', false);
     if (this.selectedFile) {
       this.items.forEach(item => {
         item.text = this.commonService.capitalize(item.text);
@@ -144,6 +149,7 @@ export class ListFilePage implements OnInit {
   }
 
   async preview(url) {
+    this.analyticService.logEvent('view-file-pdf', false);
     const modal = await this.modalController.create({
       component: FileViewerPdfPage,
       // cssClass: 'wideModal',

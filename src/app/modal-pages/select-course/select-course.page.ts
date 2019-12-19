@@ -9,6 +9,7 @@ import { User } from 'src/app/models/user';
 import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
 import { CreateReportPage } from '../create-report/create-report.page';
 import { FileViewerPage } from '../file-viewer/file-viewer.page';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-select-course',
@@ -29,7 +30,8 @@ export class SelectCoursePage implements OnInit {
     private router: Router,
     private commonService: CommonService,
     private authService: AuthenticationService,
-    private lecturerService: LecturerService
+    private lecturerService: LecturerService,
+    private analyticService: AnalyticsService
     ) {
       this.user = this.navParams.get('user');
       this.from = this.navParams.get('from');
@@ -48,9 +50,11 @@ export class SelectCoursePage implements OnInit {
 
   async selectCourse(selectCourse: Course) {
     if (this.from === 'select-file') {
+      this.analyticService.logEvent('view-file-student', false);
       this.getFile(selectCourse);
       await this.modalController.dismiss();
     } else if (this.from === 'student-report') {
+      this.analyticService.logEvent('view-student-report', false);
       this.lecturerService.selectedGroupDetail.next(this.commonService.groupDetails.value.find(gd => gd.courseUid === selectCourse.uid));
       await this.modalController.dismiss();
     } else {
@@ -61,6 +65,8 @@ export class SelectCoursePage implements OnInit {
           } else {
             course.showGroup = false;
           }
+        } else {
+          course.showGroup = false;
         }
       });
     }
@@ -103,7 +109,7 @@ export class SelectCoursePage implements OnInit {
         }
       } else {
         this.selectGroupDetail(course);
-        this.router.navigate(['list-file']);
+        this.router.navigate(['list-file']).finally(() => this.analyticService.logEvent('view-file-student', true, 'Reference'));
       }
     }
   }
@@ -121,7 +127,7 @@ export class SelectCoursePage implements OnInit {
       }
     });
     // this.analyticsService.logEvent('labContent-done');
-    return await modal.present();
+    return await modal.present().finally(() => this.analyticService.logEvent('view-file-student', true));
   }
 
 }

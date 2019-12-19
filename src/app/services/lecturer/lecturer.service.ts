@@ -8,6 +8,7 @@ import { CommonService } from '../common/common.service';
 import { DatabaseService } from '../database/database.service';
 import { takeUntil, switchMap, mergeMap, map, flatMap } from 'rxjs/operators';
 import { DocumentReference } from '@angular/fire/firestore';
+import { AnalyticsService } from '../analytics/analytics.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,8 @@ export class LecturerService {
 
   constructor(
     private commonService: CommonService,
-    private databaseService: DatabaseService
+    private databaseService: DatabaseService,
+    private analyticService: AnalyticsService
   ) {}
 
   async getReportWithUserData() {
@@ -151,7 +153,10 @@ export class LecturerService {
       this.databaseService.updateEvaluation(
         this.selectedReportData.report.evaluate,
         evaluation
-      ).finally(() => this.commonService.showToast('Successfully update'));
+      ).finally(() => {
+        this.commonService.showToast('Successfully update');
+        this.analyticService.logEvent('submit-evaluation', true);
+      });
     }
   }
 
@@ -197,19 +202,19 @@ export class LecturerService {
     };
     switch (this.commonService.uploadCategory) {
       case 'Rubric': {
-        this.databaseService.updateRubric(data);
+        this.databaseService.updateRubric(data).finally(() => this.analyticService.logEvent('upload-file', true));
         break;
       }
       case 'Manuals': {
-        this.databaseService.updateManual(data);
+        this.databaseService.updateManual(data).finally(() => this.analyticService.logEvent('upload-file', true));
         break;
       }
       case 'Schedule': {
-        this.databaseService.updateSchedule(data);
+        this.databaseService.updateSchedule(data).finally(() => this.analyticService.logEvent('upload-file', true));
         break;
       }
       case 'Reference': {
-        this.databaseService.updateReference(data);
+        this.databaseService.updateReference(data).finally(() => this.analyticService.logEvent('upload-file', true));
         break;
       }
       default: {

@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { Faculty } from 'src/app/models/faculty';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-additional-info',
@@ -23,7 +24,8 @@ export class AdditionalInfoPage implements OnInit {
     private modalController: ModalController,
     private navParams: NavParams,
     private authService: AuthenticationService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private analyticService: AnalyticsService
   ) {
     this.user = this.navParams.get('user');
     this.commonService.faculties.pipe(takeUntil(this.unsubscribeRegister$)).subscribe(faculties => {
@@ -45,6 +47,7 @@ export class AdditionalInfoPage implements OnInit {
   }
 
   update() {
+    this.analyticService.logEvent('register-google', false);
     this.fullName = this.commonService.capitalize(this.fullName);
     const userData: User = {
       uid: this.user.uid,
@@ -56,6 +59,7 @@ export class AdditionalInfoPage implements OnInit {
       photoURL: this.user.photoURL
     };
     this.authService.saveUserData(userData).finally(() => {
+      this.analyticService.logEvent('register-google', true);
       this.authService.requestInfo.next(null);
       this.closeAdditionalInfo();
       this.authService.enteringApp(this.user.uid);

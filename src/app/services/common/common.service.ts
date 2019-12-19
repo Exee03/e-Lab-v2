@@ -7,6 +7,7 @@ import { GroupDetail, Group } from 'src/app/models/group';
 import { Course } from 'src/app/models/course';
 import { Files } from 'src/app/models/files';
 import { Faculty } from 'src/app/models/faculty';
+import { AnalyticsService } from '../analytics/analytics.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,8 @@ export class CommonService {
     private alertController: AlertController,
     private loadingController: LoadingController,
     private platform: Platform,
-    private databaseService: DatabaseService
+    private databaseService: DatabaseService,
+    private analyticService: AnalyticsService
   ) {}
 
   isNative() {
@@ -154,19 +156,19 @@ export class CommonService {
   updateFile(data: Files) {
     switch (this.uploadCategory) {
       case 'Rubric': {
-        this.databaseService.updateRubric(data);
+        this.databaseService.updateRubric(data).finally(() => this.analyticService.logEvent('update-rubric', true));
         break;
       }
       case 'Manuals': {
-        this.databaseService.updateManual(data);
+        this.databaseService.updateManual(data).finally(() => this.analyticService.logEvent('update-rubric', true));
         break;
       }
       case 'Schedule': {
-        this.databaseService.updateSchedule(data);
+        this.databaseService.updateSchedule(data).finally(() => this.analyticService.logEvent('update-rubric', true));
         break;
       }
       case 'Reference': {
-        this.databaseService.updateReference(data);
+        this.databaseService.updateReference(data).finally(() => this.analyticService.logEvent('update-rubric', true));
         break;
       }
       default: {

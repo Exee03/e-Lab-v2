@@ -3,13 +3,11 @@ import { Header, Data, Report, HeaderData } from 'src/app/models/report';
 import { User } from 'src/app/models/user';
 import { GroupDetail } from 'src/app/models/group';
 import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { first, takeUntil } from 'rxjs/operators';
 import { MenuController } from '@ionic/angular';
-import { Router } from '@angular/router';
 import { Items } from 'src/app/models/files';
 import { CommonService } from 'src/app/services/common/common.service';
 import { Subject } from 'rxjs';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-evaluate-report',
@@ -30,9 +28,9 @@ export class EvaluateReportPage implements OnInit {
 
   constructor(
     private menuCtrl: MenuController,
-    private router: Router,
     private lecturerService: LecturerService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private analyticService: AnalyticsService
   ) {
     this.menuCtrl.enable(true, 'evaluation');
     this.menuCtrl.enable(false, 'mainMenu');
@@ -153,13 +151,12 @@ export class EvaluateReportPage implements OnInit {
       indexHeader += 1;
       indexSubHeader = 0.1;
     });
-    // this.analyticsService.logEvent('previewWriteReport-done', {method: this.report.uid});
     return this.document;
   }
 
   doneEvaluate() {
+    this.analyticService.logEvent('submit-evaluation', false);
     let isComplete = true;
-    // console.log(this.items);
     this.items = this.lecturerService.items.value;
     this.items.forEach(item => {
       if (item.mark === 0) {
@@ -167,14 +164,12 @@ export class EvaluateReportPage implements OnInit {
       }
     });
     if (!isComplete) {
-      // tslint:disable-next-line: max-line-length
       this.commonService.showAlert(
         'Oppsss...',
         '',
         'The Evaluation Form still have blank mark. Please complete the form before submit it.'
       );
     } else {
-      // tslint:disable-next-line: max-line-length
       this.lecturerService.submitEvaluation(this.items);
     }
   }
