@@ -3,7 +3,7 @@ import { Header, Data, Report, HeaderData } from 'src/app/models/report';
 import { User } from 'src/app/models/user';
 import { GroupDetail } from 'src/app/models/group';
 import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
-import { MenuController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { Items } from 'src/app/models/files';
 import { CommonService } from 'src/app/services/common/common.service';
 import { Subject } from 'rxjs';
@@ -28,6 +28,7 @@ export class EvaluateReportPage implements OnInit {
 
   constructor(
     private menuCtrl: MenuController,
+    private navCtrl: NavController,
     private lecturerService: LecturerService,
     private commonService: CommonService,
     private analyticService: AnalyticsService
@@ -170,7 +171,7 @@ export class EvaluateReportPage implements OnInit {
         'The Evaluation Form still have blank mark. Please complete the form before submit it.'
       );
     } else {
-      this.lecturerService.submitEvaluation(this.items);
+      this.lecturerService.submitEvaluation(this.items).finally(() => this.navCtrl.back());
     }
   }
 }
