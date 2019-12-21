@@ -7,6 +7,8 @@ import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
 import { takeUntil } from 'rxjs/operators';
 import { DatabaseService } from 'src/app/services/database/database.service';
 import { FileViewerPage } from 'src/app/modal-pages/file-viewer/file-viewer.page';
+import { ViewProfilePage } from 'src/app/modal-pages/view-profile/view-profile.page';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-menu',
@@ -29,6 +31,7 @@ export class MenuPage implements OnInit {
     //   icon: 'help-circle-outline'
     // },
   ];
+  user: User;
   username: string;
   // tslint:disable-next-line: max-line-length
   photoURL = 'https://firebasestorage.googleapis.com/v0/b/e-lab-b4105.appspot.com/o/e-lab%2Fdefault-user.png?alt=media&token=bbd6dc4a-b9ec-478f-b83a-add40e046d2d';
@@ -63,6 +66,7 @@ export class MenuPage implements OnInit {
     this.authService.user$.pipe(takeUntil(this.databaseService.unsubscribe$)).subscribe(user => {
       if (user) {
         this.selectedPath = '/menu/dashboard';
+        this.user = user;
         this.username = user.displayName;
         this.id = user.id;
         this.photoURL = user.photoURL;
@@ -105,9 +109,18 @@ export class MenuPage implements OnInit {
     this.analyticService.logEvent('view-profile', false);
   }
 
+  async viewProfile() {
+    const modal = await this.modalController.create({
+      component: ViewProfilePage,
+      componentProps: {
+        user: this.user
+      }
+    });
+    return await modal.present();
+  }
+
   logout() {
     this.analyticService.logEvent('logout', false);
     this.authService.logout();
   }
-
 }
