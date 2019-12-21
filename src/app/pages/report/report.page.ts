@@ -124,7 +124,7 @@ export class ReportPage implements OnInit {
   }
 
   deleteReport(reportUid: string) {
-    this.studentService.deleteReport(reportUid);
+    this.studentService.deleteReportInstant(reportUid);
   }
 
   async createReport() {
