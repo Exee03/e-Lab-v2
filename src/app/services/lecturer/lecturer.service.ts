@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Report, Header, Data, ReportData } from 'src/app/models/report';
+import { Report, ReportData } from 'src/app/models/report';
 import { GroupDetail } from 'src/app/models/group';
 import { User } from 'src/app/models/user';
-import { BehaviorSubject, from, forkJoin, Observable, combineLatest } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Evaluate, Items, Files, Page } from 'src/app/models/files';
 import { CommonService } from '../common/common.service';
 import { DatabaseService } from '../database/database.service';
-import { takeUntil, switchMap, mergeMap, map, flatMap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { DocumentReference } from '@angular/fire/firestore';
 import { AnalyticsService } from '../analytics/analytics.service';
 
@@ -92,6 +92,29 @@ export class LecturerService {
       );
       this.getRubricByUid(evaluate.rubric);
     }
+  }
+
+  deleteStudentReport(reportUid: string) {
+    this.commonService.showToast('Deleting report...');
+    this.selectedReportData = this.allReportData.value.find(
+      data => data.report.uid === reportUid
+    );
+    this.selectedReportData.headers.forEach(header => {
+      this.databaseService.deleteHeader(reportUid, header.uid);
+    });
+    this.selectedReportData.subHeaders.forEach(subHeader => {
+      this.databaseService.deleteSubHeader(reportUid, subHeader.uid);
+    });
+    this.selectedReportData.data.forEach(data => {
+      if (data.type === 'image') {
+        this.databaseService.deleteDataStorage(reportUid, data.uid);
+      }
+      this.databaseService.deleteData(reportUid, data.uid);
+    });
+    if (this.selectedReportData.report.evaluate !== undefined) {
+      this.databaseService.deleteEvaluation(this.selectedReportData.report.evaluate);
+    }
+    return this.databaseService.deleteReport(reportUid).finally(() => this.commonService.showToast(`Successfully delete student's report`));
   }
 
   private preparingRubric() {

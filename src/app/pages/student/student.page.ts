@@ -3,7 +3,7 @@ import { LecturerService } from 'src/app/services/lecturer/lecturer.service';
 import { Report } from 'src/app/models/report';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
+import { ModalController, IonItemSliding } from '@ionic/angular';
 import { SelectCoursePage } from 'src/app/modal-pages/select-course/select-course.page';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { User } from 'src/app/models/user';
@@ -20,6 +20,7 @@ export class StudentPage implements OnInit {
   @Input('header') header: any;
   lastX: any;
   role = '';
+  courseCode = '';
   hasVerified = true;
   isEmpty = true;
   reports: Report[];
@@ -39,6 +40,7 @@ export class StudentPage implements OnInit {
         if (report) { this.getReport(); }
       });
       this.authService.user$.pipe(takeUntil(this.unsubscribeListReport$)).subscribe(user => {
+        this.role = authService.getRole(user);
         this.user.next(user);
       });
     }
@@ -46,6 +48,7 @@ export class StudentPage implements OnInit {
   private getReport() {
     this.lecturerService.selectedGroupDetail.pipe(takeUntil(this.unsubscribeListReport$)).subscribe(groupDetails => {
       if (groupDetails !== null) {
+        this.courseCode = groupDetails.courseCode;
         this.lecturerService.getReportWithUserData().then(() => {
           this.reports = this.lecturerService.reportsWithUserData;
           this.isEmpty = (this.reports.length !== 0) ? false : true;
@@ -60,6 +63,10 @@ export class StudentPage implements OnInit {
       // tslint:disable-next-line: no-unused-expression
       (user) ? this.selectCourse() : null;
     });
+  }
+
+  closeSlider(item: IonItemSliding) {
+    item.close();
   }
 
   async selectCourse() {
@@ -77,6 +84,10 @@ export class StudentPage implements OnInit {
     this.analyticService.logEvent('open-student-report', false);
     this.lecturerService.getStudentData(report.uid);
     this.router.navigate(['menu/evaluate-report']).finally(() => this.analyticService.logEvent('open-student-report', true));
+  }
+
+  deleteReport(reportUid: string) {
+    this.lecturerService.deleteStudentReport(reportUid);
   }
 
   // tslint:disable-next-line: use-lifecycle-interface
