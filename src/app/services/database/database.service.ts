@@ -119,8 +119,12 @@ export class DatabaseService {
     return this.afStore.collection('evaluate').doc(evaluateUid).update(evaluate);
   }
 
-  updateEvaluationToReport(evaluateUid: string, reportUid: string) {
-    return this.afStore.collection('report').doc(reportUid).set({evaluate: evaluateUid}, {merge: true});
+  updateEvaluationToReport(evaluateUid: string, reportUid: string, lastEvaluate: string) {
+    return this.afStore.collection('report').doc(reportUid).set({evaluate: evaluateUid, lastEvaluate}, {merge: true});
+  }
+
+  updateLastEvaluateToReport(reportUid: string, lastEvaluate: string) {
+    return this.afStore.collection('report').doc(reportUid).set({lastEvaluate}, {merge: true});
   }
 
   deleteEvaluation(evaluateUid: string) {

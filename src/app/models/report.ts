@@ -9,6 +9,7 @@ export interface Report {
     courseName?: string;
     courseCode?: string;
     lastEdit?: string;
+    lastEvaluate?: string;
     submit?: boolean;
     evaluate?: string;
 }

@@ -30,7 +30,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="selectCourse()">
+<ion-fab
+  vertical="bottom"
+  horizontal="end"
+  slot="fixed"
+  (click)="selectCourse()"
+>
   <ion-fab-button>
     <ion-icon name="bookmarks"></ion-icon>
   </ion-fab-button>
@@ -42,10 +47,12 @@
   (ionScrollStart)="scrollStart(header)"
   forceOverscroll="true"
 >
-<div *ngIf="isEmpty">
+  <div *ngIf="isEmpty">
     <ion-grid>
       <ion-row justify-content-center align-items-center style="height: 40vh">
-        <ion-label position="floating">It looks like your student hasn't sent a report yet...</ion-label>
+        <ion-label position="floating"
+          >It looks like your student hasn't sent a report yet...</ion-label
+        >
       </ion-row>
     </ion-grid>
   </div>
@@ -56,9 +63,12 @@
           Pending
         </ion-label>
       </ion-item-divider>
-      
+
       <ng-container *ngFor="let report of reports">
-        <ion-item *ngIf="report.evaluate == undefined" (click)="openReport(report)">
+        <ion-item
+          *ngIf="report.evaluate == undefined"
+          (click)="openReport(report)"
+        >
           <ion-icon
             name="document"
             color="soft"
@@ -67,46 +77,47 @@
           <ion-label>
             <h3>{{ report.title }}</h3>
             <p>{{ report.userName }}</p>
-            <p>{{ report.lastEdit }}</p>
+            <p style="font-style: italic;">Last edited on {{ report.lastEdit }}</p>
           </ion-label>
         </ion-item>
       </ng-container>
     </ion-item-group>
 
     <ion-item-group>
-        <ion-item-divider>
-          <ion-label>
-            Evaluated
-          </ion-label>
-        </ion-item-divider>
-  
-        <ng-container >
-          <ion-item-sliding *ngFor="let report of reports" #slider1>
-            <ion-item *ngIf="report.evaluate != undefined" (click)="openReport(report)">
-              <ion-icon
-                name="document"
-                color="soft"
-                class="ion-padding-horizontal"
-              ></ion-icon>
-              <ion-label>
-                <h3>{{ report.title }}</h3>
-                <p>{{ report.userName }}</p>
-                <p>{{ report.lastEdit }}</p>
-              </ion-label>
-            </ion-item>
-            <ion-item-options (click)="closeSlider(slider1)">
-              <ion-item-option color="primary" (click)="deleteReport(report.uid)"
-                ><ion-icon
-                  name="trash"
-                  class="ion-padding-horizontal"
-                  style="zoom:1.5;"
-                ></ion-icon
-              ></ion-item-option>
-            </ion-item-options>
-          </ion-item-sliding>
+      <ion-item-divider>
+        <ion-label>
+          Evaluated
+        </ion-label>
+      </ion-item-divider>
 
-          
-        </ng-container>
-      </ion-item-group>
+      <ng-container>
+        <ion-item-sliding *ngFor="let report of reports" #slider1>
+          <ion-item
+            *ngIf="report.evaluate != undefined"
+            (click)="openReport(report)"
+          >
+            <ion-icon
+              name="document"
+              color="soft"
+              class="ion-padding-horizontal"
+            ></ion-icon>
+            <ion-label>
+              <h3>{{ report.title }}</h3>
+              <p>{{ report.userName }}</p>
+              <p style="font-style: italic;">Last evaluated on {{ report.lastEvaluate }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item-options (click)="closeSlider(slider1)">
+            <ion-item-option color="primary" (click)="deleteReport(report.uid)"
+              ><ion-icon
+                name="trash"
+                class="ion-padding-horizontal"
+                style="zoom:1.5;"
+              ></ion-icon
+            ></ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ng-container>
+    </ion-item-group>
   </div>
 </ion-content>

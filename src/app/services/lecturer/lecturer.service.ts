@@ -168,15 +168,18 @@ export class LecturerService {
       this.databaseService.updateEvaluation(
         evaluation.uid,
         evaluation
-      ).then(() => this.databaseService.updateEvaluationToReport(evaluation.uid, this.selectedReportData.report.uid)
+      // tslint:disable-next-line: max-line-length
+      ).then(() => this.databaseService.updateEvaluationToReport(evaluation.uid, this.selectedReportData.report.uid, this.commonService.getTime())
       .finally(() => this.commonService.showToast('Successfully submitted')));
     } else {
       this.commonService.showToast('Updating evaluation...');
       evaluation.lastUpdate = this.commonService.getTime();
+      this.databaseService.updateLastEvaluateToReport(this.selectedReportData.report.uid, evaluation.lastUpdate);
       this.databaseService.updateEvaluation(
         this.selectedReportData.report.evaluate,
         evaluation
-      ).finally(() => {
+      )
+      .finally(() => {
         this.commonService.showToast('Successfully update');
         this.analyticService.logEvent('submit-evaluation', true);
       });
