@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, combineLatest } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
 import { Group } from 'src/app/models/group';
 import { Course } from 'src/app/models/course';
 import { Faculty } from 'src/app/models/faculty';
@@ -17,7 +18,10 @@ import { Evaluate, Files } from 'src/app/models/files';
 export class DatabaseService {
   unsubscribe$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private afStore: AngularFirestore) {}
+  constructor(
+    private afStore: AngularFirestore,
+    private afStorage: AngularFireStorage
+    ) {}
 
   getAllUser() {
     return this.afStore
@@ -117,6 +121,13 @@ export class DatabaseService {
 
   updateEvaluationToReport(evaluateUid: string, reportUid: string) {
     return this.afStore.collection('report').doc(reportUid).set({evaluate: evaluateUid}, {merge: true});
+  }
+
+  deleteEvaluation(evaluateUid: string) {
+    return this.afStore
+      .collection('evaluate')
+      .doc(evaluateUid)
+      .delete();
   }
 
   getAllReportBySubmit() {
@@ -349,6 +360,10 @@ export class DatabaseService {
       .collection('data')
       .doc(dataUid)
       .delete();
+  }
+
+  deleteDataStorage(reportUid: string, dataUid: string) {
+    return this.afStorage.ref(`report/${reportUid}/${dataUid}.png`).delete();
   }
 
   getAllRubric() {
