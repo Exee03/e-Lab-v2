@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Renderer2 } from '@angular/core';
+import { Component, OnInit, Input, Renderer2, OnDestroy } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { Report, Header, HeaderData, Data } from 'src/app/models/report';
 import { CommonService } from 'src/app/services/common/common.service';
@@ -18,7 +18,7 @@ import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
   templateUrl: './writing.page.html',
   styleUrls: ['./writing.page.scss'],
 })
-export class WritingPage implements OnInit {
+export class WritingPage implements OnInit, OnDestroy {
   // tslint:disable-next-line: no-input-rename
   @Input('title') title: any;
   lastX: any;
@@ -57,17 +57,14 @@ export class WritingPage implements OnInit {
     ) {
       this.authService.user$.pipe(first()).subscribe(user => this.user = user);
       this.getToken();
-      this.studentService.isGettingData.pipe(takeUntil(studentService.unsubscribeReport$)).subscribe(getData => {
-        console.log('auto refresh');
-        console.log(this.reportUid);
-        
-        if (!getData && this.reportUid) {
-          this.refresh();
-        }
-      });
     }
 
   ngOnInit() {
+    this.studentService.isGettingData.pipe(takeUntil(this.studentService.unsubscribeReport$)).subscribe(getData => {
+      if (!getData && this.reportUid) {
+        this.refresh();
+      }
+    });
   }
 
   // tslint:disable-next-line: use-lifecycle-interface
@@ -79,6 +76,7 @@ export class WritingPage implements OnInit {
       this.studentService.deleteReport(this.reportUid);
     }
     this.storage.remove('report-token');
+    this.reportUid = null;
   }
 
   getToken() {

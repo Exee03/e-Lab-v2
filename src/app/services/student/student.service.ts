@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Report, Header, Data, HeaderData } from 'src/app/models/report';
 import { DatabaseService } from '../database/database.service';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { takeUntil, finalize, first } from 'rxjs/operators';
 import { GroupDetail, Group } from 'src/app/models/group';
 import { CommonService } from '../common/common.service';
 import { Storage } from '@ionic/storage';
@@ -285,6 +285,38 @@ export class StudentService {
     this.databaseService.deleteReport(reportUid);
   }
 
+  deleteReportInstant(reportUid: string) {
+    this.commonService.showToast('Deleting report...');
+    this.selectedReport = this.reports.value.find(r => r.uid === reportUid);
+    return this.databaseService.getReportData(reportUid)
+    .pipe(
+      first(),
+      finalize(() => {
+        this.header.forEach(header => {
+          this.databaseService.deleteHeader(reportUid, header.uid);
+        });
+        this.subHeader.forEach(subHeader => {
+          this.databaseService.deleteSubHeader(reportUid, subHeader.uid);
+        });
+        this.data.forEach(data => {
+          if (data.type === 'image') {
+            this.databaseService.deleteDataStorage(reportUid, data.uid);
+          }
+          this.databaseService.deleteData(reportUid, data.uid);
+        });
+        if (this.selectedReport.evaluate !== undefined) {
+          this.databaseService.deleteEvaluation(this.selectedReport.evaluate);
+        }
+        this.databaseService.deleteReport(reportUid);
+        this.commonService.showToast('Successfully delete your report');
+      })
+      ).subscribe(data => {
+        this.header = data[0];
+        this.subHeader = data[1];
+        this.data = data[2];
+    });
+  }
+
   deleteHeader(reportUid: string, headers: Header[], headerUid: string) {
     this.commonService.showToast('Deleting header...');
     this.databaseService.updateReport(reportUid, {lastEdit: this.commonService.getTime()});
@@ -306,6 +338,9 @@ export class StudentService {
               });
               this.databaseService.deleteSubHeader(reportUid, headerData.uid);
             } else {
+              if (headerData.type === 'image') {
+                this.databaseService.deleteDataStorage(reportUid, headerData.uid);
+              }
               this.databaseService.deleteData(reportUid, headerData.uid);
             }
           });
@@ -415,6 +450,9 @@ export class StudentService {
   deleteAllData(reportUid: string, headerData: HeaderData []) {
     this.databaseService.updateReport(reportUid, {lastEdit: this.commonService.getTime()});
     headerData.forEach(data => {
+      if (data.type === 'image') {
+        this.databaseService.deleteDataStorage(reportUid, data.uid);
+      }
       this.databaseService.deleteData(reportUid, data.uid);
     });
   }
