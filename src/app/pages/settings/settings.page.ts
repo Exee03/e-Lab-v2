@@ -112,4 +112,9 @@ export class SettingsPage implements OnInit {
     return await modal.present();
   }
 
+  signOut() {
+    this.analyticService.logEvent('logout', false);
+    this.authService.logout();
+  }
+
 }
