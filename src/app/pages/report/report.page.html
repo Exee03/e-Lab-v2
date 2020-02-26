@@ -29,13 +29,18 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-fab
-  vertical="bottom"
-  horizontal="end"
-  slot="fixed"
-  (click)="createReport()"
->
-  <ion-fab-button><ion-icon name="add"></ion-icon></ion-fab-button>
+<ion-fab horizontal="end" vertical="bottom" slot="fixed">
+  <ion-fab-button>
+    <ion-icon name="arrow-dropleft"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="start">
+    <ion-fab-button color="dark" (click)="createReport()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="dark" (click)="selectMethod()">
+      <ion-icon name="git-compare"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
 </ion-fab>
 
 <ion-content
@@ -73,7 +78,7 @@
             <p>Last edited on {{ item.lastEdit }}</p>
           </ion-label>
         </ion-item>
-        <ion-item-options  (click)="closeSlider(slider1)">
+        <ion-item-options (click)="closeSlider(slider1)">
           <ion-item-option color="primary" (click)="editReport(item.uid)"
             ><ion-icon
               name="create"
@@ -111,7 +116,7 @@
             <p>Last edited on {{ item.lastEdit }}</p>
           </ion-label>
         </ion-item>
-        <ion-item-options  (click)="closeSlider(slider2)">
+        <ion-item-options (click)="closeSlider(slider2)">
           <ion-item-option color="primary" (click)="editReport(item.uid)"
             ><ion-icon
               name="create"

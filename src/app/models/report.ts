@@ -12,6 +12,7 @@ export interface Report {
     lastEvaluate?: string;
     submit?: boolean;
     evaluate?: string;
+    inGroup?: boolean;
 }
 
 export interface Header {

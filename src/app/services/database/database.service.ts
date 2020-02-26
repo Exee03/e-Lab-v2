@@ -166,6 +166,7 @@ export class DatabaseService {
         map(changes => {
           return changes.map(a => {
             const data = a.payload.doc.data() as Report;
+            if (data.inGroup === undefined) { data.inGroup = false; }
             return data;
           });
         })

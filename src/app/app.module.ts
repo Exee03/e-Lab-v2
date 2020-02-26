@@ -37,6 +37,7 @@ import { ForgotPageModule } from './modal-pages/forgot/forgot.module';
 import { RegisterPageModule } from './modal-pages/register/register.module';
 import { AdditionalInfoPageModule } from './modal-pages/additional-info/additional-info.module';
 import { ViewProfilePageModule } from './modal-pages/view-profile/view-profile.module';
+import { SelectMethodPageModule } from './modal-pages/select-method/select-method.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -64,7 +65,8 @@ import { ViewProfilePageModule } from './modal-pages/view-profile/view-profile.m
     ForgotPageModule,
     RegisterPageModule,
     AdditionalInfoPageModule,
-    ViewProfilePageModule
+    ViewProfilePageModule,
+    SelectMethodPageModule
   ],
   providers: [
     StatusBar,

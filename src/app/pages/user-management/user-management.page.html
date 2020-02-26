@@ -46,14 +46,19 @@
   forceOverscroll="true"
 >
   <ion-list class="ion-padding">
-    <ion-item *ngFor="let user of users | filterUser: textFilter" (click)="viewProfile(user)">
-    <ion-label>
-      <h2>{{ user.fullName }}</h2>
-      <p>{{ user.email }}</p>
-    </ion-label>
-    <ion-chip color="primary" mode="ios" outline="true" (click)="changeRole(user)">
-      <ion-label>{{ user.roleLabel }}</ion-label>
-    </ion-chip>
-  </ion-item>
+    <ion-item *ngFor="let user of users | filterUser: textFilter">
+      <ion-label (click)="viewProfile(user)">
+        <h2>{{ user.fullName }}</h2>
+        <p>{{ user.email }}</p>
+      </ion-label>
+      <ion-chip
+        color="primary"
+        mode="ios"
+        outline="true"
+        (click)="changeRole(user)"
+      >
+        <ion-label>{{ user.roleLabel }}</ion-label>
+      </ion-chip>
+    </ion-item>
   </ion-list>
 </ion-content>

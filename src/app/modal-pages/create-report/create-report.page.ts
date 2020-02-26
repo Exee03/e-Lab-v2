@@ -6,6 +6,10 @@ import { Course } from 'src/app/models/course';
 import { Group } from 'src/app/models/group';
 import { Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
+import { Items } from 'src/app/models/files';
+import { User } from 'src/app/models/user';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-create-report',
@@ -19,6 +23,13 @@ export class CreateReportPage implements OnInit {
   group: Group;
   userUid: string;
   from = '';
+  items: Items[] = [{
+    id: 1,
+    text: ''
+  }];
+  textFilter = '';
+  users: User[] = [];
+  unsubscribeUsers$ = new Subject<void>();
 
   constructor(
     private modalController: ModalController,
@@ -28,6 +39,13 @@ export class CreateReportPage implements OnInit {
     private studentService: StudentService,
     private analyticService: AnalyticsService
     ) {
+      this.studentService.inGroup.pipe(takeUntil(this.unsubscribeUsers$)).subscribe(inGroup => {
+        if (inGroup === true) {
+          this.studentService.groupMembers.pipe(takeUntil(this.unsubscribeUsers$)).subscribe(users => {
+            this.users = users;
+          });
+        }
+      });
     }
 
   ngOnInit() {
@@ -36,6 +54,35 @@ export class CreateReportPage implements OnInit {
     this.userUid = this.navParams.get('userUid');
     this.title = this.navParams.get('title');
     this.from = this.navParams.get('from');
+  }
+
+  // tslint:disable-next-line: use-lifecycle-interface
+  ngOnDestroy() {
+    this.unsubscribeUsers$.next();
+    this.unsubscribeUsers$.complete();
+  }
+
+  filterCourse(event) {
+    const text: string = event.target.value;
+    this.textFilter = text;
+  }
+
+  addItem() {
+    this.items.push({
+      id: this.items.length + 1,
+      text: ''
+    });
+  }
+
+  removeItem(index: number) {
+    const oldArray = this.items.splice(index);
+    const remains = oldArray.slice(1, oldArray.length);
+    this.items = this.items.concat(remains);
+    // tslint:disable-next-line: no-shadowed-variable
+    for (let index = 0; index < this.items.length; index++) {
+      const element = this.items[index];
+      element.id = index + 1;
+    }
   }
 
   createReport() {

@@ -7,10 +7,11 @@ import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common/common.service';
 import { SelectCoursePage } from 'src/app/modal-pages/select-course/select-course.page';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { CreateReportPage } from 'src/app/modal-pages/create-report/create-report.page';
 import { User } from 'src/app/models/user';
+import { SelectMethodPage } from 'src/app/modal-pages/select-method/select-method.page';
 
 @Component({
   selector: 'app-report',
@@ -21,7 +22,7 @@ export class ReportPage implements OnInit {
   // tslint:disable-next-line: no-input-rename
   @Input('header') header: any;
   lastX: any;
-  user: User;
+  user = new BehaviorSubject<User>(null);
   role = '';
   hasVerified = true;
   report: Report[] = [];
@@ -40,32 +41,51 @@ export class ReportPage implements OnInit {
       this.hasVerified = this.authService.isEmailVerified.value;
       this.authService.user$.pipe(first()).subscribe(user => {
         this.role = authService.getRole(user);
-        this.user = user;
+        this.user.next(user);
       });
       this.isEmpty = (studentService.reports.value.length === 0) ? true : false;
       this.studentService.reports.pipe(takeUntil(this.unsubscribeListReport$)).subscribe(reports => {
-        this.report = [];
-        reports.forEach(report => {
-          const course = this.commonService.groupDetails.value.find(gd => gd.courseUid === report.course);
-          this.report.push({
-            uid: report.uid,
-            courseCode: course.courseCode,
-            // course: course.uid,
-            lastEdit: report.lastEdit,
-            title: report.title,
-            submit: report.submit
+        this.studentService.inGroup.pipe(takeUntil(this.unsubscribeListReport$)).subscribe(inGroup => {
+          this.report = [];
+          reports.forEach(report => {
+            const course = this.commonService.groupDetails.value.find(gd => gd.courseUid === report.course);
+            if (report.inGroup === inGroup) {
+              this.report.push({
+                uid: report.uid,
+                courseCode: course.courseCode,
+                // course: course.uid,
+                lastEdit: report.lastEdit,
+                title: report.title,
+                submit: report.submit
+              });
+            }
           });
         });
       });
     }
 
   ngOnInit() {
+    this.user.pipe(takeUntil(this.unsubscribeListReport$)).subscribe(user => {
+      // tslint:disable-next-line: no-unused-expression
+      (user) ? this.selectMethod() : null;
+    });
   }
 
   // tslint:disable-next-line: use-lifecycle-interface
   ngOnDestroy() {
     this.unsubscribeListReport$.next();
     this.unsubscribeListReport$.complete();
+  }
+
+  async selectMethod() {
+    const modal = await this.modalController.create({
+      component: SelectMethodPage,
+      componentProps: {
+        from: 'Select',
+        user: this.user.value
+      }
+    });
+    return await modal.present();
   }
 
   async logScrolling($event) {
@@ -132,7 +152,7 @@ export class ReportPage implements OnInit {
     const modal = await this.modalController.create({
       component: SelectCoursePage,
       componentProps: {
-        user: this.user,
+        user: this.user.value,
         from: 'writing'
       }
     });
@@ -148,7 +168,7 @@ export class ReportPage implements OnInit {
       componentProps: {
         course,
         group,
-        userUid: this.user.uid,
+        userUid: this.user.value.uid,
         title: report.title,
         from: 'Edit'
       }

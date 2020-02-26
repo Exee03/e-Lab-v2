@@ -20,12 +20,16 @@
         <table align="center">
           <tr>
             <td>
-              <ion-title style="padding-top: 30px; text-align: center;">{{ course.name }}</ion-title>
+              <ion-title style="padding-top: 30px; text-align: center;"
+                >{{ course.name }}</ion-title
+              >
             </td>
           </tr>
           <tr>
             <td>
-              <ion-title style="padding-top: 20px; text-align: center">{{ group.name }}</ion-title>
+              <ion-title style="padding-top: 20px; text-align: center"
+                >{{ group.name }}</ion-title
+              >
             </td>
           </tr>
           <tr>
@@ -42,6 +46,69 @@
                 ></ion-input>
               </ion-item>
             </td>
+          </tr>
+          <tr>
+            <ion-searchbar
+              mode="ios"
+              placeholder="Search by name or email"
+              inputmode="text"
+              type="text"
+              (ionChange)="filterCourse($event)"
+              [debounce]="250"
+              animated="true"
+              cancel-button-icon
+            ></ion-searchbar>
+            <ion-list class="ion-padding">
+              <ion-item *ngFor="let user of users | filterUser: textFilter">
+                <ion-label>
+                  <h2>{{ user.fullName }}</h2>
+                  <p>{{ user.email }}</p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-item-group
+              lines="none"
+              *ngFor="
+                let item of items;
+                let i = index;
+                let f = first;
+                let l = last
+              "
+              color="light"
+            >
+              <ion-item-divider>
+                <ion-label slot="start">Item {{ item.id }}</ion-label>
+                <ion-button slot="end" (click)="addItem()" *ngIf="l">
+                  <ion-icon slot="icon-only" name="add"></ion-icon>
+                </ion-button>
+                <ion-button slot="end" (click)="removeItem(i)" *ngIf="!f">
+                  <ion-icon slot="icon-only" name="remove"></ion-icon>
+                </ion-button>
+              </ion-item-divider>
+
+              <ion-item style="padding-left: 10px;">
+                <ion-label>Text : </ion-label>
+                <ion-input
+                  id="input"
+                  type="text"
+                  placeholder="Text of the Items"
+                  [(ngModel)]="item.text"
+                  name="itemText_{{ i }}"
+                  required
+                ></ion-input>
+              </ion-item>
+              <ion-item style="padding-left: 10px;">
+                <ion-label>Weight : </ion-label>
+                <ion-input
+                  id="input"
+                  type="number"
+                  placeholder="Weight of the Items"
+                  [(ngModel)]="item.weight"
+                  name="itemWeight_{{ i }}"
+                  required
+                ></ion-input>
+              </ion-item>
+            </ion-item-group>
           </tr>
         </table>
       </ion-col>

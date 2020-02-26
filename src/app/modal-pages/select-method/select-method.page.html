@@ -1,27 +1,27 @@
 <ion-header>
   <ion-toolbar color="soft">
     <ion-buttons slot="end">
-      <ion-button (click)="closeChangeRole()">
+      <ion-button (click)="closeSelectMethod()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="soft">
     <div align="center">
-      <h1>Change role for</h1>
+      <h1>Hi !</h1>
       <br />
       <h3>{{ user.displayName }}</h3>
       <br />
-      <p>Choose their role for this e-Lab.</p>
+      <p>Choose your method for reporting before we begin.</p>
     </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding" align="center">
-  <ion-list *ngFor="let role of roles">
-    <ion-item class="roundBox" color="primary" (click)="selectRole(role)">
+  <ion-list *ngFor="let method of methods">
+    <ion-item class="roundBox" color="primary" (click)="selectMethod(method)">
       <ion-label>
-        <h2 style="text-align: center;">{{ role }}</h2>
+        <h2 style="text-align: center;">{{ method }}</h2>
       </ion-label>
     </ion-item>
   </ion-list>

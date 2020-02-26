@@ -10,6 +10,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { Evaluate } from 'src/app/models/files';
 import { Router } from '@angular/router';
 import { AnalyticsService } from '../analytics/analytics.service';
+import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,8 @@ export class StudentService {
   evaluation: Evaluate;
   isGettingData = new BehaviorSubject(false);
   selectedGroupDetail: GroupDetail;
+  inGroup = new BehaviorSubject(false);
+  groupMembers = new BehaviorSubject<User[]>([]);
 
   constructor(
     private databaseService: DatabaseService,

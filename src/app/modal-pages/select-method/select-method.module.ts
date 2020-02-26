@@ -5,24 +5,22 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CreateReportPage } from './create-report.page';
-import { PipesModule } from 'src/app/pipes/pipes.module';
+import { SelectMethodPage } from './select-method.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: CreateReportPage
+    component: SelectMethodPage
   }
 ];
 
 @NgModule({
   imports: [
-    PipesModule,
     CommonModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [CreateReportPage]
+  declarations: [SelectMethodPage]
 })
-export class CreateReportPageModule {}
+export class SelectMethodPageModule {}
